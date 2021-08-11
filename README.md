@@ -4,7 +4,8 @@ This repo was made to cleanly demonstrate how I got from raw NGS data to differe
 ## Step 1: From reads to bams
 <details>
   <summary>Click to view detailed code</summary>
-  ### Checking quality of sequencing data
+  
+### Checking quality of sequencing data
   
 ```
 pip install multiqc
@@ -107,4 +108,37 @@ done < $1
 -----------
 ```
 </details>
+
+## Step 2: from bams to genotype likelihoods and PCA
+I used ANGSD to get genotype likelihoods which then I used to create a PCA and look for population structure and possible outliers
+<details>
+  <summary>Click to view detailed code</summary>
+	Run this code on all individuals from all populations together for PCA
   
+```
+cd /users/c/p/cpetak/WGS/angsd
+
+ref="/users/c/p/cpetak/WGS/reference_genome/GCF_000002235.5_Spur_5.0_genomic.fna"
+
+./angsd -b /users/c/p/cpetak/WGS/all_rmdups_jo.txt \
+-ref ${ref} \
+-anc ${ref} \
+-out /users/c/p/cpetak/WGS/allpopstrict_angsd_polysites \
+-nThreads 16 \
+-remove_bads 1 \
+-C 50 \
+-baq 1 \
+-minMapQ 30 \
+-minQ 20 \
+-minInd 119 \ # 85% of all individuals (140)
+-setMinDepthInd 4 \ # note that later we'll use 3 here, filtering is stricter for now to reduce data for PCA
+-skipTriallelic 1 \
+-GL 1 \
+-doCounts 1 \
+-doMajorMinor 1 \
+-doMaf 1 \
+-doGlf 2 \
+-SNP_pval 1e-6
+```
+	
+</details>
