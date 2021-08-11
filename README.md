@@ -27,6 +27,10 @@ cd /users/c/p/cpetak/WGS/fastqc_output
 multiqc .
 ```
 
+#### Results:
+![](images/test1.png)
+![](images/test1.png)	
+
 ### Mapping to the reference genome
 
 ```
@@ -143,4 +147,4 @@ ref="/users/c/p/cpetak/WGS/reference_genome/GCF_000002235.5_Spur_5.0_genomic.fna
 	
 </details>
 	
-![](images/test1)
+should also add pca for quality check
