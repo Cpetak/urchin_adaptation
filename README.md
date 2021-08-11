@@ -28,8 +28,7 @@ multiqc .
 ```
 
 #### Results:
-![](images/test1.png)
-![](images/test1.png)	
+[](images/multiqc_report.html)	
 
 ### Mapping to the reference genome
 
