@@ -28,9 +28,13 @@ multiqc .
 ```
 
 #### Results:
-[Multiqc Report available here](images/multiqc_report.html)	
+[Multiqc Report nicely displayed is available here](https://htmlpreview.github.io/?https://github.com/Cpetak/urchin_adaptation/blob/main/images/multiqc_report.html) 
+	
+OR 
+	
+[Multiqc Report raw file for download is available here](images/multiqc_report.html)	
 
-
+	
 ### Mapping to the reference genome
 
 ```
