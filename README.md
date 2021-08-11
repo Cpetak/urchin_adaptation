@@ -115,6 +115,14 @@ while read line ; do
 done < $1
 -----------
 ```
+	 
+#### Results:
+[File with all mapping stats](all_mapping_stats.csv)
+In all 3 images below, x axis is the 140 individuals
+![](images/coverage_fig.png)
+![](images/flagstat_fig.png)
+![](images/mapping_stat.png)
+	 
 </details>
 
 ## Step 2: from bams to genotype likelihoods and PCA
