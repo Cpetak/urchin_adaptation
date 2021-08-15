@@ -134,7 +134,9 @@ I used ANGSD to get genotype likelihoods which then I used to create a PCA and l
 ```
 cd /users/c/p/cpetak/WGS/angsd
 
-ref="/users/c/p/cpetak/WGS/reference_genome/GCF_000002235.5_Spur_5.0_genomic.fna"
+ref="/users/c/p/cpetak/WGS/reference_genome/GCF_000002235.5_Spur_5.0_genomic.fna" 
+# latest version of the reference genome downloaded from NCBI on the 7th of October 2020
+# angsd version: 0.933-102-g7d57642 (htslib: 1.11-9-g2264113) build(Oct 16 2020 18:14:45)
 
 ./angsd -b /users/c/p/cpetak/WGS/all_rmdups_jo.txt \
 -ref ${ref} \
@@ -163,14 +165,14 @@ python /users/c/p/cpetak/pcangsd/pcangsd.py -beagle /users/c/p/cpetak/WGS/allpop
 ```
 #R
 C <- as.matrix(read.table("pcangsd_covmatrix.cov"))
-ids <- read.table("~/Downloads/pca_pops.txt")
+ids <- read.table("~/Downloads/pca_pops.txt") #text file with 20 lines of the single word BOD, then 20 lines of CAP etc in the order they appeared in all_rmdups_jo.txt
 e <- eigen(C)
 # base R
 plot(e$vectors[,1:2],xlab="PC1",ylab="PC2", bg=ids$V1, pch=21)
 #ggplot
 library(ggplot2)
+library(tidyverse) #still have to run this to get jpeg I can upload to this repo!!!
 df <- data.frame(pop = ids$V1, PC1 = e$vectors[,1], PC2 = e$vectors[,2])
-
 df= rownames_to_column(df)
 ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
   geom_point(size=3, shape=21) +
