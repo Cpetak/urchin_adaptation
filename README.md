@@ -223,3 +223,6 @@ PCA of average coverage:
      
 Again, no clustering is visible.
 </details>	
+	
+## Step 3: Getting per-site Fst values
+	
