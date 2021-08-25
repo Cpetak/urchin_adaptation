@@ -174,7 +174,7 @@ e <- eigen(C)
 plot(e$vectors[,1:2],xlab="PC1",ylab="PC2", bg=ids$V1, pch=21)
 #ggplot
 library(ggplot2)
-library(tidyverse) #still have to run this to get jpeg I can upload to this repo!!!
+library(tidyverse)
 df <- data.frame(pop = ids$V1, PC1 = e$vectors[,1], PC2 = e$vectors[,2])
 df= rownames_to_column(df)
 ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
@@ -185,8 +185,17 @@ ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_1.png" width="400" />
 	
 3 individuals seem to be very different from the other 137 individuals. Thus, there 3 were dropped from further analysis. New PCA with 137 individuals:
-	
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_2.png" width="400" />
+
+No clustering by population can be seen.
 	
 </details>
 	
-Then proceed to use the PCA for quality check.
+Then, I proceed to use the PCA for quality check.
+
+<details>
+  <summary>Click to view results</summary>
+	First, I checked if there is any clustering by coverage. 
+	
+</details>	
