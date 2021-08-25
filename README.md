@@ -184,7 +184,7 @@ ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
 #### Results:
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_1.png" width="400" />
 	
-3 individuals seem to be very different from the other 137 individuals. Thus, there 3 were dropped from further analysis. New PCA with 137 individuals:
+3 individuals seem to be very different from the other 137 individuals. Thus, these 3 were dropped from further analysis. New PCA with 137 individuals (ANGSD was rerun with only 137 individuals):
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_2.png" width="400" />
 
