@@ -179,6 +179,8 @@ ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
   theme_bw()
 ```
 #### Results:
+![](images/PCA_1.pdf)
+3 individuals seem to be very different from the other 137 individuals. Thus, there 3 were dropped from further analysis. New PCA with 137 individuals:
 	
 	
 </details>
