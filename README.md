@@ -119,9 +119,12 @@ done < $1
 #### Results:
 [File with all mapping stats](all_mapping_stats.csv)
 In all 3 images below, x axis is the 140 individuals
-![](images/coverage_fig.png)
-![](images/flagstat_fig.png)
-![](images/mapping_stat.png)
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/coverage_fig.png" width="400" />
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/flagstat_fig.png" width="400" />
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/mapping_stat.png" width="400" />
 	 
 </details>
 
@@ -179,7 +182,8 @@ ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
   theme_bw()
 ```
 #### Results:
-![](images/PCA_1.pdf)
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_1.png" width="400" />
+	
 3 individuals seem to be very different from the other 137 individuals. Thus, there 3 were dropped from further analysis. New PCA with 137 individuals:
 	
 	
