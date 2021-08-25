@@ -196,6 +196,30 @@ Then, I proceed to use the PCA for quality check.
 
 <details>
   <summary>Click to view results</summary>
-	First, I checked if there is any clustering by coverage. 
+	I checked if there is any clustering by coverage. 
 	
+Histogram of average coverage per individual:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/hist_coverage.png" width="400" />
+	
+```
+#R
+covdata <- read.table("covs.txt") #this is without outliers
+covdata$V2 <- ifelse(covdata$V1<6.5, "little", "lot")
+
+ids <-covdata
+
+#ggplot
+df <- data.frame(pop = ids$V2, PC1 = e$vectors[,1], PC2 = e$vectors[,2])
+df= rownames_to_column(df)
+ggplot(df, aes(x=PC1, y=PC2, fill=pop)) +
+  geom_point(size=3, shape=21) +
+  theme_bw()
+```
+
+PCA of average coverage:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_cov.png" width="400" />
+     
+Again, no clustering is visible.
 </details>	
