@@ -4,9 +4,9 @@ This repo was made to cleanly demonstrate how I got from raw NGS data to differe
 ## Step 1: From reads to bams
 <details>
   <summary>Click to view detailed code</summary>
-  
+
 ### Checking quality of sequencing data
-  
+
 ```
 pip install multiqc
 spack load fastqc@0.11.7
@@ -34,7 +34,7 @@ OR
 	
 [Multiqc Report raw file for download is available here](images/multiqc_report.html)	
 
-	
+
 ### Mapping to the reference genome
 
 ```
@@ -115,7 +115,7 @@ while read line ; do
 done < $1
 -----------
 ```
-	 
+
 #### Results:
 [File with all mapping stats](all_mapping_stats.csv)
 In all 3 images below, x axis is the 140 individuals
@@ -133,7 +133,7 @@ I used ANGSD to get genotype likelihoods which then I used to create a PCA and l
 <details>
   <summary>Click to view detailed code</summary>
 	Run this code on all individuals from all populations together for PCA
-  
+
 ```
 cd /users/c/p/cpetak/WGS/angsd
 
@@ -197,7 +197,7 @@ Then, I proceed to use the PCA for quality check.
 <details>
   <summary>Click to view results</summary>
 	I checked if there is any clustering by coverage. 
-	
+
 Histogram of average coverage per individual:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/hist_coverage.png" width="400" />
@@ -225,5 +225,78 @@ Again, no clustering is visible.
 </details>	
 	
 ## Step 3: Getting per-site Fst values - global, #TODO
-## Step 4: 
-	
+
+## Step 4: Bayenv factor, #TODO
+
+Describe how to get file with pos info for all sites where MAF > 0.025. (bayenv_withpos_0025filter.csv)
+
+## Step 5: Getting per-site Fst values - pair-wise
+
+<details>
+  <summary>Click to view detailed code</summary>
+</details>
+
+First, I run angsd on each population separately. E.g.
+
+```bash
+./angsd -b /users/c/p/cpetak/WGS/BOD_rmdups_jo.txt 
+-ref /users/c/p/cpetak/WGS/reference_genome/GCF_000002235.5_Spur_5.0_genomic.fna 
+-anc /users/c/p/cpetak/WGS/reference_genome/GCF_000002235.5_Spur_5.0_genomic.fna 
+-out /users/c/p/cpetak/WGS/angsd_new/BOD_angsd_allsites 
+-nThreads 16 
+-remove_bads 1 
+-C 50 
+-baq 1 
+-minMapQ 30 
+-minQ 20 
+-minInd 17 
+-setMinDepthInd 3 
+-skipTriallelic 1 
+-GL 1 
+-doCounts 1 
+-doMajorMinor 1 
+-doMaf 1 
+-doSaf 1 
+-doHWE 1
+```
+
+Since I have 7 populations, I have 21 possible pairs of populations. For each of the possible pairs:
+
+Note to self!! create new folder, copy all .saf.idx (and other related files) of BOD, TER, SAN, KIB, LOM from angsd_new and CAP, FOG from angsd_noout and do all of the following there
+
+```bash
+#!/bin/sh
+dir=/users/c/p/cpetak/WGS/angsd_new
+while read line ; do #give this script a list of pop pairs displayed as pop1.pop2
+    pop1=$(cut -d '.' -f1 <<< $line)
+    pop2=$(cut -d '.' -f2 <<< $line)
+    echo $pop1
+    echo $pop2
+    FILE=$(mktemp)
+    cat header.txt >> $FILE
+    echo "cd /users/c/p/cpetak/WGS/angsd/misc" >> $FILE
+    echo "./realSFS ${dir}/${pop1}_angsd_allsites.saf.idx ${dir}/${pop2}_angsd_allsites.saf.idx -P 16 -fold 1 > ${dir}/pairwise_fst/${pop1}_${pop2}_allsites.sfs" >> $FILE #folded option!
+    sbatch $FILE
+    sleep 0.5
+    rm $FILE
+done < $1
+```
+
+Then for each pair (using TER.BOD as an example)
+
+```bash
+cd /users/c/p/cpetak/WGS/angsd/misc
+dir=/users/c/p/cpetak/WGS/angsd_new
+./realSFS fst index ${dir}/TER_angsd_allsites.saf.idx ${dir}/BOD_angsd_allsites.saf.idx -sfs ${dir}/pairwise_fst/TER_BOD_allsites.sfs -fold 1 -fstout ${dir}/pairwise_fst/TER_BOD_allsites2 -whichFst 1
+```
+
+Finally
+
+```bash
+./realSFS fst print /users/c/p/cpetak/WGS/angsd_new/pairwise_fst/TER_BOD_allsites2.fst.idx > /users/c/p/cpetak/WGS/angsd_new/pairwise_fst/TER_BOD_allsites.fst
+```
+
+To filter by MAF I did the following: keep only rows of the .fst files that are also present in the csv I used for bayenv. (bayenv_withpos_0025filter.csv)
+
+
+
