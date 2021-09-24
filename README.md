@@ -296,7 +296,86 @@ Finally
 ./realSFS fst print /users/c/p/cpetak/WGS/angsd_new/pairwise_fst/TER_BOD_allsites.fst.idx > /users/c/p/cpetak/WGS/angsd_new/pairwise_fst/TER_BOD_allsites.fst
 ```
 
-To filter by MAF I did the following: keep only rows of the .fst files that are also present in the csv I used for bayenv. (bayenv_withpos_0025filter.csv)
+To filter by MAF I did the following: keep only rows of the .fst files that are also present in the csv I used for bayenv. (bayenv_onlypos_0025filter.csv)
 
+fixing bayenv and fst files to have correct format:
 
+```bash
+sed s/"\.1"/"\.1,"/g bayenv_onlypos_0025filter.csv > bayenv_onlypos_temp.csv
+awk -F "," '{print $2"_"$1, $0}' bayenv_onlypos_temp.csv > bayenv_onlypos_temp2.csv
+cut -d' ' -f1 bayenv_onlypos_temp2.csv > bayenv_onlypos_temp3.csv
+# now it is one column, with pos_chr format, rm intermediate temp files and rename to _cleaned
+# repeat with each .fst file too (not exactly as they have different starting format) to match format:
+awk '{print $2"_"$1, $0}' CAP_BOD_allsites.fst # example file
+# then sort each of the fst files along with the bayenv file
+sort -k1 
+```
+
+now that the files are all fixed and sorted, we can join each of the fst files with the bayenv file
+
+```bash
+# for each fst file
+join -1 1 -2 1 sorted_bayenv_onlypos_cleaned.csv ${pop1}_${pop2}_allsites_cleaned.fst > joined_${pop1}_${pop2}_allsites
+# IMPORTANT! Make sure that the column you are joining on (in this case the first column) has the same format in both files you are joining! E.g. pos_chr. I chose this IDing instead of chr_pos to avoid sorting issues.
+```
+
+Then, created 2 files - one with the list of pop pairs within pH groups, and one with a list of pop pairs between pH groups. For each of these categories I combined the corresponding joined files. 
+
+```bash
+cat $(cat between_pairs) > combined_between
+cat $(cat within_pairs) > combined_within
+```
+
+ I then averaged Fsts coming from within and between pop pairs separately to following way:
+
+```python
+import pandas as pd
+import matplotlib.pylab as plt
+import numpy as np
+
+col_names1=["ID","chr","pos","A", "B"]
+
+df = pd.read_csv('combined_between',names=col_names1, sep="\s")
+df["pos"]=df.pos.astype('int64', copy=False)
+
+df["fst"]=df["A"]/df["B"]
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+df['fst'] = df['fst'].fillna(0)
+
+df = df.drop(["ID","A","B"], 1)
+
+ndf=df.groupby(["chr","pos"]).mean()
+
+ndf.to_csv('average_between.csv') # do same with within
+```
+
+Sometimes the average Fst is slightly negative, let's round that to 0
+
+```bash
+awk -F, '$3+0<0{$3=0}1' average_between.csv | sed 's/ /,/g' > average_between_cropped.csv
+```
+
+Next, we need to subtract average_within from average_between. I used the following code:
+
+```python
+import pandas as pd
+import numpy as np
+
+col_names1=["chr","pos", "fst"]
+
+betw = pd.read_csv('average_between_cropped.csv', sep=",")
+withi = pd.read_csv('average_within_cropped.csv', sep=",")
+
+betw["pos"]=betw.pos.astype('int64', copy=False)
+withi["pos"]=withi.pos.astype('int64', copy=False)
+betw["fst"] = pd.to_numeric(betw["fst"], downcast="float")
+withi["fst"] = pd.to_numeric(withi["fst"], downcast="float")
+
+cdf=betw.merge(withi, on=["chr","pos"], how="outer")
+cdf = cdf.fillna(0)
+
+cdf["final_fst"]=cdf["fst_x"]-cdf["fst_y"]
+
+cdf.to_csv("subbed.csv")
+```
 
