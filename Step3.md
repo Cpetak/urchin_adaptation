@@ -119,12 +119,14 @@ for i in $(ls); do sed '1d' $i > ${i}_fixed; done #fixing csvs
 cat *csv_fixed > combined.csv #moved temp files into small_temp
 cut -f 2-10 -d , combined.csv | nl -w 1 -p -s , > fixed_combined.csv #reindexing csv
 vim fixed_combined.csv -> insert as first line: "","LocusName","He","FST","T1","T2","FSTNoCorr","T1NoCorr","T2NoCorr","meanAlleleFreq" 
+#moved to results folder
 awk -F, '$3 > 0.1' fixed_combined.csv > fixed_combined_goodhe.csv #getting only sites with He > 0.1
 cat fixed_combined_goodhe.csv | cut -d ',' -f2,7 > twocol.csv #keeping only position and FSTNoCorr columns
 sort -k 2 -t , -n -r twocol.csv > sorted_twocol.csv #sort by Fst
-cat sorted_twocol.csv | grep -v "e" > test.csv remove first few lines that were incorrectly sorted due to eg e-10
-head -6823 test.csv > reduced_sorted_twocol.csv #keep only high Fst pos, the threshold will depend on the distribution
 ```
 
-Where Pop.txt 
+Where Pop.txt is just a list of 1 repeated 20 times, 2, repeated 20 times, etc.
 
+To summarise, there are results of angsd -> vcf of all individuals, no filter, all 15 million sites
+
+In fixed_combined_goodhe.csv: only 2,625,660 as these are He > 0.1
