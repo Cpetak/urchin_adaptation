@@ -1,10 +1,10 @@
 # Step 4: Running LFMM
 
+folders:
 
+WGS/make_vcf/using_vcf/LFMM
 
-For LFMM:
-
- converted filtered_vcf into LFMM format after removing CAP and FOG outliers:
+converted filtered_vcf (as described in [Code for Step 3](https://github.com/Cpetak/urchin_adaptation/blob/main/Step3.md), section "Filtering vcf_tail.vcf") into LFMM format after removing CAP and FOG outliers:
 
 ```bash
 # take out first 10 columns - info about position, and columns 31, 57, 58 which are the outlier individuals
@@ -26,9 +26,7 @@ sed 's/0\/0/0/g' cut_filtered_vcf_t | sed 's/0\/1/1/g' | sed 's/1\/0/1/g' | sed 
 
 Running LFMM:
 
-Getting K
-
-spack load r@3.6.3
+Getting K, spack load r@3.6.3
 
 ```R
 #devtools::install_github("bcm-uga/lfmm")
@@ -55,6 +53,8 @@ dev.off()
 #For the A. thaliana samples, the screeplot indicates that there are around K=6 main components in the data. 
 #We will use K=6 latent factors in subsequent analyses of the A. thaliana example.
 ```
+
+
 
 Getting p-values
 
@@ -115,3 +115,6 @@ plot(-log10(pvalues),
 dev.off()
 ```
 
+TODO redo with different K
+
+Also p-values adjusted?
