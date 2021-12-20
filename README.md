@@ -139,9 +139,9 @@ I used ANGSD to get genotype likelihoods which then I used to create a PCA and l
   <summary>Click to view detailed code</summary>
 	
 folders:  
-scripts and files for PCANGSD:  
+scripts and files for PCANGSD: WGS/my_pcangsd/my_PCA (for creating PCA of all individuals based on pops), WGS/my_pcangsd/PCA_bias (for quality check PCA)
 	
-	Run this code on all individuals from all populations together for PCA
+Run this code on all individuals from all populations together for PCA
 
 ```
 cd /users/c/p/cpetak/WGS/angsd
@@ -213,7 +213,7 @@ Histogram of average coverage per individual:
 	
 ```
 #R
-covdata <- read.table("covs.txt") #this is without outliers
+covdata <- read.table("covs.txt") #this is without outliers, average coverage per individual
 covdata$V2 <- ifelse(covdata$V1<6.5, "little", "lot")
 
 ids <-covdata
