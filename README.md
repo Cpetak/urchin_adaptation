@@ -139,7 +139,7 @@ I used ANGSD to get genotype likelihoods which then I used to create a PCA and l
   <summary>Click to view detailed code</summary>
 	
 folders:  
-scripts and files for PCANGSD: WGS/my_pcangsd/my_PCA (for creating PCA of all individuals based on pops), WGS/my_pcangsd/PCA_bias (for quality check PCA)
+scripts and files for PCANGSD: WGS/my_pcangsd/my_PCA 
 	
 Run this code on all individuals from all populations together for PCA
 
@@ -205,6 +205,10 @@ Then, I proceed to use the PCA for quality check.
 
 <details>
   <summary>Click to view results</summary>
+	
+folders:  
+scripts and files for PCANGSD: WGS/my_pcangsd/PCA_bias
+	
 	I checked if there is any clustering by coverage. 
 
 Histogram of average coverage per individual:
