@@ -53,7 +53,7 @@ cat fixed_all_pop_angsd_copy_onlyGT.vcf | grep -v "#" > vcf_tail.vcf
 
 Note:  fixed_all_pop_angsd.vcf and fixed_all_pop_angsd_onlyGT.vcf in the make_vcf folder are the files prior the the above 2 steps!!! so ignore them and use vcf_tail.vcf
 
-## Use Outflank for per-site Fst
+## Use Outflank for per-site Fst - 7 pops
 
 Folder: 
 
@@ -130,3 +130,77 @@ Where Pop.txt is just a list of 1 repeated 20 times, 2, repeated 20 times, etc.
 To summarise, there are results of angsd -> vcf of all individuals, no filter, all 15 million sites
 
 In fixed_combined_goodhe.csv: only 2,625,660 as these are He > 0.1
+
+## Filtering vcf_tail.vcf
+
+folder:
+
+WGS/make_vcf/using_vcf/LFMM
+
+filtered vcf_tail.vcf using the bayenv 0025 list as follows:
+
+```bash
+# getting first column of vcf as chromosome.position
+awk -F "\t" '{print $1$2, $0}' vcf_tail.vcf > vcf_tail_idd2
+# keeping only lines in vcf that are also in list of filtered positions
+awk 'FNR==NR{a[$0];next}($1 in a)' filt_posi_fixed vcf_tail_idd2 > filtered_vcf
+# where filt_posi_fixed is the list of loci after filtering, 1 column, chromosome.position format
+# results in a file that has 991,430 positions (994,220 only MAF filter), because remember here we also filtered for SNP_pval
+```
+
+TODO explain bayenv filtering steps
+
+## Use Outflank for per-site Fst - 2 pops
+
+folder:
+
+WGS/make_vcf/using_vcf/FCT
+
+I started from filtered_vcf as described above (MAF filtering), then cleaned for Outflank as follows:
+
+```bash
+#cleaning for outflank
+sed -i 's/NA/NA\/NA/g' filtered_vcf
+cut --complement -d$' ' -f1 filtered_vcf > cleaned_filtered_vcf
+#taking out outliers
+cut --complement -d$'\t' -f30,56,57 cleaned_filtered_vcf > cut_filtered_vcf
+# put back vcf header
+cat vcf_head.vcf cut_filtered_vcf > topped_vcf.vcf
+# take out names of outliers in vcf header
+sed -i 's/\/users\/c\/p\/cpetak\/WGS\/BWA\_out\/CAP\_18170X101\_200925\_A00421\_0244\_AHKML5DSXY\_S121\_L002\_R1\_001\.rmdup\.bam//g' topped_vcf.vcf
+sed -i 's/\/users\/c\/p\/cpetak\/WGS\/BWA\_out\/FOG\_18170X127\_200925\_A00421\_0244\_AHKML5DSXY\_S147\_L002\_R1\_001\.rmdup\.bam//g' topped_vcf.vcf
+sed -i 's/\/users\/c\/p\/cpetak\/WGS\/BWA\_out\/FOG\_18170X128\_200925\_A00421\_0244\_AHKML5DSXY\_S148\_L002\_R1\_001\.rmdup\.bam//g' topped_vcf.vcf
+# removing accidental double tabs
+sed 's:\t\t*:\t:g' topped_vcf.vcf > test.vcf
+```
+
+Outflank
+
+```R
+library(OutFLANK)
+library(vcfR)
+
+vcf <- read.vcfR("test.vcf", verbose=FALSE)
+ind <- read.table("Pop.txt", header=TRUE)
+
+convertVCFtoCount3 <- function(string){
+    a <- as.numeric(unlist(strsplit(string, split = c("[|///]"))))
+    odd = seq(1, length(a), by=2)
+    a[odd] + a[odd+1]
+}
+all.vcf.gen <- vcf@gt[,-1]
+system.time(gen_table <- matrix(convertVCFtoCount3(all.vcf.gen), ncol=ncol(all.vcf.gen)))
+
+locinames <- paste(vcf@fix[,"CHROM"], vcf@fix[,"POS"], sep="_")
+SNPdata <- t(gen_table)
+SNPdata[is.na(SNPdata)] <- 9
+k <- max(ind$pop)
+
+FstDataFrame <- MakeDiploidFSTMat(SNPdata,locinames,ind$pop)
+
+write.csv(FstDataFrame, file = "results.csv")
+```
+
+Where Pop.txt is just a list of 57 1s (first "pop" BOD + CAP + FOG individuals) and 80 2s (second "pop").
+
+TODO rerun above but with 7 pops
