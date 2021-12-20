@@ -397,4 +397,3 @@ write.csv(FstDataFrame, file = "results.csv")
 ```
 
 Where Pop.txt is just a list of 57 1s (first "pop" BOD + CAP + FOG individuals) and 80 2s (second "pop").
-
