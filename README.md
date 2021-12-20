@@ -5,6 +5,14 @@ This repo was made to cleanly demonstrate how I got from raw NGS data to differe
 <details>
   <summary>Click to view detailed code</summary>
 
+folders: 
+	
+raw sequence data: WGS/all_fastqs, WGS/all_fastqs_backup, WGS/zipped_backups, WGS/sequencing_meta_data
+	
+scripts and temporary files for alignment and quality check: WGS/scripts_files_for_alignment
+	
+output of alignment: WGS/BWA_out
+	
 ### Checking quality of sequencing data
 
 ```
@@ -132,6 +140,11 @@ In all 3 images below, x axis is the 140 individuals
 I used ANGSD to get genotype likelihoods which then I used to create a PCA and look for population structure and possible outliers
 <details>
   <summary>Click to view detailed code</summary>
+	
+folders:
+	
+scripts and files for PCANGSD:
+	
 	Run this code on all individuals from all populations together for PCA
 
 ```
