@@ -1,9 +1,11 @@
+# Step 1: from reads to bams
+
 folders:  
 raw sequence data: WGS/all_fastqs, WGS/all_fastqs_backup, WGS/zipped_backups, WGS/sequencing_meta_data  
 scripts and temporary files for alignment and quality check: WGS/scripts_files_for_alignment  
 output of alignment: WGS/BWA_out  
-	
-### Checking quality of sequencing data
+
+## Checking quality of sequencing data
 
 ```
 pip install multiqc
@@ -25,15 +27,15 @@ cd /users/c/p/cpetak/WGS/fastqc_output
 multiqc .
 ```
 
-#### Results:
+### Results:
+
 [Multiqc Report nicely displayed is available here](https://htmlpreview.github.io/?https://github.com/Cpetak/urchin_adaptation/blob/main/images/multiqc_report.html) 
 	
 OR 
 	
 [Multiqc Report raw file for download is available here](images/multiqc_report.html)	
 
-
-### Mapping to the reference genome
+## Mapping to the reference genome
 
 ```
 spack load bwa@0.7.17
@@ -58,7 +60,8 @@ while read line ; do
 done < $1
 -----------
 ```
-#### Checking mapping statistics
+## Checking mapping statistics
+
 ```
 -----------
 while read line ; do
@@ -114,7 +117,8 @@ done < $1
 -----------
 ```
 
-#### Results:
+### Results:
+
 [File with all mapping stats](all_mapping_stats.csv)
 In all 3 images below, x axis is the 140 individuals
 
