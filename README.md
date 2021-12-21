@@ -16,6 +16,10 @@ This repo was made to cleanly demonstrate how I got from raw NGS data to differe
 
 [Code for Step 4](https://github.com/Cpetak/urchin_adaptation/blob/main/Step4.md)
 
+## Step 5: PCAngsd
+
+[Code for Step 5](https://github.com/Cpetak/urchin_adaptation/blob/main/Step5.md)
+
 ## Step 5: Getting per-site Fst values - pair-wise
 
 <details>
