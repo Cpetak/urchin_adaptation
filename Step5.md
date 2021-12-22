@@ -31,11 +31,48 @@ Run similar Angsd code for all individuals as before, but less strict (-setMinDe
 Followed by pcangsd as before:
 
 ```bash
-python /users/c/p/cpetak/pcangsd/pcangsd.py -beagle /users/c/p/cpetak/WGS/my_pcangsd/persite/allpopsdepth3_angsd_polysites.beagle.gz -o /users/c/p/cpetak/WGS/my_pcangsd/persite/PCangsd_selection -selection -sites_save
+python -u /users/c/p/cpetak/pcangsd/pcangsd.py -beagle /users/c/p/cpetak/WGS/my_pcangsd/persite/allpopsdepth3_angsd_polysites.beagle.gz -o /users/c/p/cpetak/WGS/my_pcangsd/persite/PCangsd_selection -selection -sites_save -threads 64
 ```
 
 TODO repeat with -pcadapt instead of -selection
 
-Still running...
+TODO change minMAF? Default 0.05
+
+Run in half an hour
 
 Tutorial I was following: http://www.popgen.dk/software/index.php/PCAngsdTutorial
+
+```R
+library(RcppCNPy) # Numpy library for R
+
+## function for QQplot
+qqchi<-function(x,...){
+lambda<-round(median(x)/qchisq(0.5,1),2)
+  qqplot(qchisq((1:length(x)-0.5)/(length(x)),1),x,ylab="Observed",xlab="Expected",...);abline(0,1,col=2,lwd=2)
+  legend("topleft",paste("lambda=",lambda))
+  }
+
+### read in seleciton statistics (chi2 distributed)
+s<-npyLoad("PCangsd_selection.selection.npy")
+
+## make QQ plot to QC the test statistics
+pdf(file="qqplot.pdf")
+qqchi(s)
+dev.off()
+
+# convert test statistic to p-value
+pval<-1-pchisq(s,1)
+
+## read positions (hg38)
+p<-read.table("PCangsd_selection.sites",colC=c("factor","factor","integer"),sep="_")
+
+names(p)<-c("nothing","chr","pos")
+
+write.csv(pval,"pcangsd_results.csv")
+
+## make manhatten plot
+pdf(file="manhattenplot.pdf")
+plot(-log10(pval),col=p$chr,xlab="Chromosomes",main="Manhattan plot")
+dev.off()
+```
+
