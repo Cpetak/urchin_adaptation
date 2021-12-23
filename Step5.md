@@ -76,3 +76,8 @@ plot(-log10(pval),col=p$chr,xlab="Chromosomes",main="Manhattan plot")
 dev.off()
 ```
 
+"The Bonferroni correction compensates for that increase by testing each individual hypothesis at a significance level of α / m where α is the desired overall alpha level and m is the number of hypotheses"
+
+I have 2,119,846 SNPs, alpha = 0.05, -> 2.35x10-8
+
+664 outliers
