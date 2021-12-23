@@ -10,7 +10,7 @@ This repo was made to cleanly demonstrate how I got from raw NGS data to differe
 
 Getting the filtered sites
 
-[Code for Step 2](https://github.com/Cpetak/urchin_adaptation/blob/main/Step2.md)
+[Code for Filtering steps](https://github.com/Cpetak/urchin_adaptation/blob/main/Filtering_steps.md)
 
 
 
