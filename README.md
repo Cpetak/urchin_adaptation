@@ -33,3 +33,7 @@ Getting the filtered sites
 ## Step 7: Getting pair-wise global Fst values
 
 [Code for Step 7](https://github.com/Cpetak/urchin_adaptation/blob/main/Step7.md)
+
+## Step 8: Per-site nucleotide diversity
+
+[Code for Step 8](https://github.com/Cpetak/urchin_adaptation/blob/main/Step8.md)

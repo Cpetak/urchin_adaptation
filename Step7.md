@@ -1,5 +1,7 @@
 # Step 7: Getting pair-wise global Fst values
 
+Folder: WGS/angsd_new/pairwise_fst_cleaned
+
 Method 1:
 
 ```bash
