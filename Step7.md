@@ -31,7 +31,7 @@ df = df.drop(["ID","A","B"], 1)
 print(df["fst"].mean())
 ```
 
-Results are in pairwise_global_fst.csv file. My method on the filtered dataset and the realsfs on the original dataset generated pairwise global Fst values that significantly positively correlated (p<0.001, adjusted r-squared = 0.526), and pairwise global Fst values did not correlate with distance between the populations, no matter which method was used, thus there was no isolation by distance in this WGS dataset.
+Results are in [this](pairwise_global_fst.csv) and  [this](pairwise_global_fst.xlsx) file. My method on the filtered dataset and the realsfs on the original dataset generated pairwise global Fst values that significantly positively correlated (p<0.001, adjusted r-squared = 0.526), and pairwise global Fst values did not correlate with distance between the populations, no matter which method was used, thus there was no isolation by distance in this WGS dataset.
 
 Realsfs vs distance: adj r squared: 0.024, p-val = 0.238
 
