@@ -2,7 +2,7 @@
 
 Folders:
 
-WGS/angsd_new/ for angsd output, WGS/angsd_new/pairwise_fst_cleaned for all other files and scripts
+WGS/angsd_new/ for angsd outputs, WGS/angsd_new/pairwise_fst_cleaned for all other files and scripts
 
 First, I run angsd on each population separately. E.g.
 
@@ -49,6 +49,8 @@ while read line ; do #give this script a list of pop pairs displayed as pop1.pop
     rm $FILE
 done < $1
 ```
+
+For all pairs containing CAP and FOG the angsd output with no outliers was used (from angsd_noout)
 
 Then for each pair (using TER.BOD as an example)
 
