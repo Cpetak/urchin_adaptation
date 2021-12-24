@@ -1,4 +1,8 @@
-# Step 5: Getting per-site Fst values - pair-wise
+# Step 6: Getting per-site Fst values - pair-wise
+
+Folders:
+
+WGS/angsd_new/ for angsd output, WGS/angsd_new/pairwise_fst_cleaned for all other files and scripts
 
 First, I run angsd on each population separately. E.g.
 
@@ -24,9 +28,9 @@ First, I run angsd on each population separately. E.g.
 -doHWE 1
 ```
 
-Since I have 7 populations, I have 21 possible pairs of populations. For each of the possible pairs:
+For FOG and CAP, I also run the above code without outliers -> angsd_noout
 
-Note to self!! create new folder, copy all .saf.idx (and other related files) of BOD, TER, SAN, KIB, LOM from angsd_new and CAP, FOG from angsd_noout and do all of the following there
+Since I have 7 populations, I have 21 possible pairs of populations. For each of the possible pairs:
 
 ```bash
 #!/bin/sh
