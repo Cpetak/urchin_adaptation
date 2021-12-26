@@ -145,10 +145,10 @@ awk -F "\t" '{print $1$2, $0}' vcf_tail.vcf > vcf_tail_idd2
 # keeping only lines in vcf that are also in list of filtered positions
 awk 'FNR==NR{a[$0];next}($1 in a)' filt_posi_fixed vcf_tail_idd2 > filtered_vcf
 # where filt_posi_fixed is the list of loci after filtering, 1 column, chromosome.position format
-# results in a file that has 991,430 positions (994,220 only MAF filter), because remember here we also filtered for SNP_pval
+# results in a file that has 991,430 positions (994,220 only MAF filter*), because remember here we also filtered for SNP_pval
 ```
 
-TODO explain bayenv filtering steps
+*This is coming from the filtering steps described in [Code for Filtering steps](https://github.com/Cpetak/urchin_adaptation/blob/main/Filtering_steps.md)
 
 ## Use Outflank for per-site Fst - 2 pops
 
