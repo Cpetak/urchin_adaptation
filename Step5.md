@@ -38,7 +38,7 @@ TODO repeat with -pcadapt instead of -selection
 
 TODO change minMAF? Default 0.05
 
-Run in half an hour
+
 
 Tutorial I was following: http://www.popgen.dk/software/index.php/PCAngsdTutorial
 
@@ -81,3 +81,11 @@ dev.off()
 I have 2,119,846 SNPs, alpha = 0.05, -> 2.35x10-8
 
 664 outliers
+
+### Results
+
+Visualised PCA again, code in [here](code/pca.R)
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/pcangsd_madeforpersite.png" width="400" />
+
+No clustering by pop, no clustering my North, Middle, South, no clustering by pH, none of the first 5 PC combinations.

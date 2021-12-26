@@ -38,6 +38,8 @@ then:
 
 vcf_phase.py --vcf merged.vcf --phase-algorithm beagle
 
+TODO this output (phased) doesnt make any sense but merged.vcf is correct!
+
 to visualise vcf files:
 
 ```python
