@@ -55,6 +55,8 @@ Note:  fixed_all_pop_angsd.vcf and fixed_all_pop_angsd_onlyGT.vcf in the make_vc
 
 ## Use Outflank for per-site Fst - 7 pops
 
+NOTE: I didn't end up using this version of the code... look below
+
 Folder: 
 
 WGS/make_vcf/using_vcf/my_outflank, small temporary files: /WGS/make_vcf/using_vcf/my_outflank/small_temp
@@ -137,7 +139,7 @@ folder:
 
 WGS/make_vcf/using_vcf/LFMM
 
-filtered vcf_tail.vcf using the bayenv 0025 list as follows:
+filtered vcf_tail.vcf using the bayenv 0025 list* as follows:
 
 ```bash
 # getting first column of vcf as chromosome.position
@@ -202,5 +204,34 @@ write.csv(FstDataFrame, file = "results.csv")
 ```
 
 Where Pop.txt is just a list of 57 1s (first "pop" BOD + CAP + FOG individuals) and 80 2s (second "pop").
+
+```R
+library(OutFLANK)
+library(vcfR)
+
+FstDataFrame <- read.csv(file = 'results.csv', header=TRUE,row.names=1)
+
+#reduced_df<-FstDataFrame[seq(1,nrow(FstDataFrame),1000),]
+reduced_df<-FstDataFrame
+
+pdf("line.pdf")
+plot(reduced_df$FST, reduced_df$FSTNoCorr, xlim=c(-0.01,0.3), ylim=c(-0.01,0.3), pch=20)
+abline(0,1)
+dev.off()
+
+pdf("dots.pdf")
+plot(reduced_df$He, reduced_df$FSTNoCorr, pch=20, col="grey")
+dev.off()
+
+pdf("hist.pdf")
+hist(reduced_df$FSTNoCorr[reduced_df$He>0.1],xlim=c(0,0.3), breaks=50)
+dev.off()
+```
+
+
+
+### Results
+
+
 
 TODO rerun above but with 7 pops
