@@ -8,12 +8,6 @@ This repo was made to cleanly demonstrate how I got from raw NGS data to differe
 ## Step 2: from bams to genotype likelihoods and PCA
 [Code for Step 2](https://github.com/Cpetak/urchin_adaptation/blob/main/Step2.md)
 
-Getting the filtered sites
-
-[Code for Filtering steps](https://github.com/Cpetak/urchin_adaptation/blob/main/Filtering_steps.md)
-
-
-
 ## Step 3: Getting per-site Fst values - global
 [Code for Step 3](https://github.com/Cpetak/urchin_adaptation/blob/main/Step3.md)
 
@@ -37,3 +31,4 @@ Getting the filtered sites
 ## Step 8: Per-site nucleotide diversity
 
 [Code for Step 8](https://github.com/Cpetak/urchin_adaptation/blob/main/Step8.md)
+
