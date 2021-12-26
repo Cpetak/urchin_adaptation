@@ -4,9 +4,7 @@ Folders:
 
 WGS/angsd_new, WGS/angsd_new/pop_split, WGS/angsd_new/my_bayenv/testing_new
 
-TODO how i made the maf files in angsd_new
-
-TODO comment code below and write a summary of what is in the final file
+Note: code for angsd that resulted in files in angsd_new and angsd_noout: first step in [Code for Step 6](https://github.com/Cpetak/urchin_adaptation/blob/main/Step6.md)
 
 Since population maf files were very large, I split each maf file into 1,000,000 line chuncks in separate folders inside angsd_new:
 
@@ -277,3 +275,7 @@ final_df.to_csv('/users/c/p/cpetak/WGS/angsd_new/my_bayenv/testing_new/bayenv_wi
 ```
 
 File I am using a bunch in downstream analysis: bayenv_withpos_0025filter.csv
+
+Final number of sites: 994,220
+
+Noouts, biallelic (across all pops, not just per pop), minMAF 0.025, every pop has site information
