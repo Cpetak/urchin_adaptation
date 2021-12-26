@@ -119,7 +119,7 @@ done < $1
 
 ### Results:
 
-[File with all mapping stats](all_mapping_stats.csv)
+[File with all mapping stats](data/all_mapping_stats.csv)
 In all 3 images below, x axis is the 140 individuals
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/coverage_fig.png" width="400" />
