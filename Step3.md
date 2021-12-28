@@ -228,7 +228,63 @@ hist(reduced_df$FSTNoCorr[reduced_df$He>0.1],xlim=c(0,0.3), breaks=50)
 dev.off()
 ```
 
+```R
+library(OutFLANK)
+library(vcfR)
 
+FstDataFrame <- read.csv(file = 'results.csv', header=TRUE,row.names=1)
+
+print("read file")
+
+k=2
+q=0.05
+
+outlier <- OutFLANK(FstDataFrame, NumberOfSamples=k) #investigate options
+
+write.csv(outlier, file = "outliers_from_outflank.csv")
+
+print("created outlier")
+
+pdf("outflank.pdf")
+OutFLANKResultsPlotter(outlier, withOutliers = TRUE,NoCorr = TRUE, Hmin = 0.1, binwidth = 0.001, Zoom =FALSE, RightZoomFraction = 0.05, titletext = NULL) #investigate options
+dev.off()
+
+print("created outflank.pdf")
+
+pdf("p_hist.pdf")
+hist(outlier$results$pvaluesRightTail)
+dev.off()
+
+num_out <- sum(outlier$results$qvalues<q, na.rm=TRUE)
+
+if (num_out > 0) {
+print("there are outliers:")
+print(num_out)
+pdf("outliers.pdf")
+plot(outlier$results$He, outlier$results$FST, pch=20, col="grey")
+    points(outlier$results$He[outlier$results$qvalues<q], outlier$results$FST[outlier$results$qvalues<q], pch=21, col="blue")
+dev.off()
+
+print("created outliers.pdf")
+
+top_candidates <- outlier$results$qvalues<q & outlier$results$He>0.1
+topcan <- outlier$results[top_candidates,]
+
+write.csv(topcan, file = "top_fst.csv")
+}
+
+print("all done")
+```
+
+however, like this, fit is poor and p value distribution is not uniform
+
+so trying with left and right trim fraction parameters -> nothing changed
+
+So I created a random subset of vcf_tail and rerun everything above on that to see if my filtering is biasing the distribution (not chi-squared) -> do left and right trim do anything?
+
+I might end up just taking the top 1% as before... with bootstrapping
+
+amúgy elbasztam előbb úgyhogy újra kell futtatni az outflank-et, k=2 nem k=7
 
 ### Results
 
