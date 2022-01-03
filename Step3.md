@@ -280,7 +280,9 @@ however, like this, fit is poor and p value distribution is not uniform
 
 so trying with left and right trim fraction parameters -> nothing changed
 
-So I created a random subset of vcf_tail and rerun everything above on that to see if my filtering is biasing the distribution (not chi-squared) -> do left and right trim do anything?
+So I created a random subset of vcf_tail and rerun everything above on that to see if my filtering is biasing the distribution (not chi-squared) 
+
+-> same distribution of Fst, now trying with 7 pops instead of 2 -> different distribution? outflank works with this?
 
 I might end up just taking the top 1% as before... with bootstrapping
 
