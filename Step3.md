@@ -278,9 +278,41 @@ print("all done")
 
 ### Results
 
-For all figures, see [this folder](https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT) 
+For all figures, see [this folder](https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT). Note: Don't try to open line and dot files saved as pdf, they are huge and will likely freeze your computer :)
 
-I calculated Fsts 4 ways: for 2 and 7 populations, and 
+I calculated Fsts 4 ways: for 2 and 7 populations, and for sites with random filtering (same number of SNPs in the end but selected at random, regardless of MAF) and filtering as described above (considering MAF, etc), to see if my way of filtering influenced the overall distribution of Fsts
+
+All line and dot plots looked good. A description of what these plots show: http://rstudio-pubs-static.s3.amazonaws.com/305384_9aee1c1046394fb9bd8e449453d72847.html
+
+A representative line plot (for 2 pop, normal filtering): 
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/line_2pop.jpg" width="400" />
+
+SNPs with missing a lot of data would have an elevated value of uncorrected Fst relative to corrected Fst. SNPs like this should be removed before running OutFLANK.
+
+A representative dots plot (for 7 pop, normal filtering):
+
+ <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/dots_7pop.jpg" width="400" />
+
+This is just meant to show how for low He SNPs Fst is inflated. SNPs for which He < 0.1 were removed in outlier calculations (OutFlank function, default).
+
+Now let's look at the distribution of Fsts
+
+2 populations, normal filtering:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_2pop.jpg" width="400" />
+
+2 populations, random filtering:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_2pop_random.jpg" width="400" />
+
+7 populations, normal filtering:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_7pop.jpg" width="400" />
+
+7 populations, random filtering:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_7pop_random.jpg" width="400" />
 
 
 
