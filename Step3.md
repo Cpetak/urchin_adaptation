@@ -276,6 +276,12 @@ write.csv(topcan, file = "top_fst.csv")
 print("all done")
 ```
 
+### Results
+
+For all figures, see [this folder](https://htmlpreview.github.io/?https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT) 
+
+
+
 however, like this, fit is poor and p value distribution is not uniform
 
 so trying with left and right trim fraction parameters -> nothing changed
@@ -287,9 +293,3 @@ So I created a random subset of vcf_tail and rerun everything above on that to s
 I might end up just taking the top 1% as before... with bootstrapping
 
 amúgy elbasztam előbb úgyhogy újra kell futtatni az outflank-et, k=2 nem k=7
-
-### Results
-
-
-
-TODO rerun above but with 7 pops
