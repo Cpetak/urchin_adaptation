@@ -278,7 +278,7 @@ print("all done")
 
 ### Results
 
-For all figures, see [this folder](https://htmlpreview.github.io/?https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT) 
+For all figures, see [this folder](https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT) 
 
 
 
