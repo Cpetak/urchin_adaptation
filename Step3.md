@@ -300,19 +300,19 @@ Now let's look at the distribution of Fsts (He > 0.1)
 
 2 populations, normal filtering:
 
-<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_2pop.pdf" width="400" />
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_2pop.jpg" width="400" />
 
 2 populations, random filtering:
 
-<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_2pop_random.pdf" width="400" />
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_2pop_random.jpg" width="400" />
 
 7 populations, normal filtering:
 
-<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_7pop.pdf" width="400" />
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_7pop.jpg" width="400" />
 
 7 populations, random filtering:
 
-<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_7pop_random.pdf" width="400" />
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/hist_7pop_random.jpg" width="400" />
 
 Thus, while filtering didn't influence the shape of the Fst distribution, allocating individuals into 2 populations resulted in a very different distribution. This makes sence. In reality, we sampled 7 populations, so that is the real Fst distribution: most sites have Fst near 0.02, low, but not 0 as they are a bit more similar within group then between group. However, when I put the individuals into 2 populations (based on pH) most differences disappear as there are many many sites with Fst = 0.
 
