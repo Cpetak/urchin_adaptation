@@ -296,7 +296,7 @@ A representative dots plot (for 7 pop, normal filtering):
 
 This is just meant to show how for low He SNPs Fst is inflated. SNPs for which He < 0.1 were removed in outlier calculations (OutFlank function, default).
 
-Now let's look at the distribution of Fsts (He > 0.1)
+Now let's look at the distribution of Fsts (He > 0.1):
 
 2 populations, normal filtering:
 
@@ -318,16 +318,15 @@ Thus, while filtering didn't influence the shape of the Fst distribution, alloca
 
 (Note: there were a total of 991,431 SNPs, for 2 pops 358,803 SNPs were He < 0.1, for 7 pops 357,221 SNPs with He < 0.1, so histograms were made with approximately the same number of SNPs, even if it doesn't look like it)
 
+#### Using OutFlank:
 
+Running OutFlank of default settings (as written above in code chunk) resulted in a good fit for the distribution with 7 populations, but was very poor with 2 populations. This is likely because OutFlank only works with chi-square distributions. Changing the right and left trim fractions didn't help. Thus, for the 7 populations calculations I used OutFlank, but not for the 2 population one - for this I run a bootstrap and selected the top 1% of all sites. 
 
-however, like this, fit is poor and p value distribution is not uniform
+OutFlank fit:
 
-so trying with left and right trim fraction parameters -> nothing changed
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outflank_2pop_default.jpg" width="400" />
 
-So I created a random subset of vcf_tail and rerun everything above on that to see if my filtering is biasing the distribution (not chi-squared) 
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outflank_7pop_default.jpg" width="400" />
 
--> same distribution of Fst, now trying with 7 pops instead of 2 -> different distribution? outflank works with this?
+Distribution of p-values:
 
-I might end up just taking the top 1% as before... with bootstrapping
-
-amúgy elbasztam előbb úgyhogy újra kell futtatni az outflank-et, k=2 nem k=7
