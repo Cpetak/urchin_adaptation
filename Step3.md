@@ -324,9 +324,25 @@ Running OutFlank of default settings (as written above in code chunk) resulted i
 
 OutFlank fit:
 
+2 pops:
+
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outflank_2pop_default.jpg" width="400" />
+
+7 pops:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outflank_7pop_default.jpg" width="400" />
 
 Distribution of p-values:
+
+2 pops:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_2pop_default.jpg" width="400" />
+
+note the excess of p-values near 1, indicating poor fit of the left tail.
+
+7 pops:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_7pop_default.jpg" width="400" />
+
+note that this distribution is uniform, indicating a good fit.
 
