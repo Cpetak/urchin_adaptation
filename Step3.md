@@ -280,6 +280,12 @@ print("all done")
 
 For all figures, see [this folder](https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT) 
 
+I calculated Fsts 4 ways: for 2 and 7 populations, and 
+
+
+
+
+
 
 
 however, like this, fit is poor and p value distribution is not uniform
