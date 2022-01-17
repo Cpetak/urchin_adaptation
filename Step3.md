@@ -342,7 +342,7 @@ note the excess of p-values near 1, indicating poor fit of the left tail.
 
 7 pops:
 
-<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_7pop_default.jpg" width="400" />
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_7pop_dafault.jpg" width="400" />
 
 note that this distribution is uniform, indicating a good fit.
 
