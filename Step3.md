@@ -320,7 +320,7 @@ Thus, while filtering didn't influence the shape of the Fst distribution, alloca
 
 #### Using OutFlank:
 
-Running OutFlank of default settings (as written above in code chunk) resulted in a good fit for the distribution with 7 populations, but was very poor with 2 populations. This is likely because OutFlank only works with chi-square distributions. Changing the right and left trim fractions didn't help. Thus, for the 7 populations calculations I used OutFlank, but not for the 2 population one - for this I run a bootstrap and selected the top 1% of all sites. 
+Running OutFlank of default settings (as written above in code chunk) resulted in a good fit for the distribution with 7 populations, but was very poor with 2 populations. This is likely because OutFlank only works with chi-squared distributions. Changing the right and left trim fractions didn't help. Thus, for the 7 populations calculations I used OutFlank, but not for the 2 population one - for this I run a bootstrap and selected the top 1% of all sites. 
 
 OutFlank fit:
 
@@ -346,3 +346,6 @@ note the excess of p-values near 1, indicating poor fit of the left tail.
 
 note that this distribution is uniform, indicating a good fit.
 
+but no outliers... as in no q-value < 0.05, but there are loci p-value < 0.05
+
+Decrease right or left trim fraction? FOLYT KÖV
