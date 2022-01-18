@@ -348,4 +348,4 @@ note that this distribution is uniform, indicating a good fit.
 
 but no outliers... as in no q-value < 0.05, but there are loci p-value < 0.05
 
-Decrease right or left trim fraction? FOLYT KÖV
+Decrease right or left trim fraction? doesn't seem to change a damn thing
