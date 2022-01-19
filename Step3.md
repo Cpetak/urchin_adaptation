@@ -358,7 +358,11 @@ Fit: (modified the above two ways leads to same plot)
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_7pop_q01_h005.jpg" width="400" />
 
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outliers_7pop_q01_h005_r01.jpg" width="400" />
+
 For the 2 populations one: 2241 outliers with default settings  (q, Hmin, trims, everything) 
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outliers_2pops_default.jpg" width="400" />
 
 I was worried about the distribution of my Fsts, the fit, and the p-value distribution. However, I found this tutorial where they had a similar distribution to mine and they still used it. to be fair the did LD pruning to make the fit better, but I am not gonna do that because LD in urchins is very low (https://rpubs.com/lotterhos/OutFLANK_cichlid_pruning), (LD citation: https://www.biorxiv.org/node/126985.full). Also, another paper used outflank with the same looking distribution with the same kind of fit: https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1008119.
 
