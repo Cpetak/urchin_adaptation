@@ -294,7 +294,7 @@ A representative dots plot (for 7 pop, normal filtering):
 
  <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/dots_7pop.jpg" width="400" />
 
-This is just meant to show how for low He SNPs Fst is inflated. SNPs for which He < 0.1 were removed in outlier calculations (OutFlank function, default).
+This is just meant to show how for low He SNPs Fst is inflated. SNPs for which He < 0.1 were removed in outlier calculations (OutFlank function, default). Note how there aren't any positions He < 0.05, as there sites were filtered out already.
 
 Now let's look at the distribution of Fsts (He > 0.1):
 
@@ -320,7 +320,7 @@ Thus, while filtering didn't influence the shape of the Fst distribution, alloca
 
 #### Using OutFlank:
 
-Running OutFlank of default settings (as written above in code chunk) resulted in a good fit for the distribution with 7 populations, but was very poor with 2 populations. This is likely because OutFlank only works with chi-squared distributions. Changing the right and left trim fractions didn't help. Thus, for the 7 populations calculations I used OutFlank, but not for the 2 population one - for this I run a bootstrap and selected the top 1% of all sites. 
+Running OutFlank of default settings (as written above in code chunk) resulted in a relatively good fit for both of the distributions.
 
 OutFlank fit:
 
@@ -338,7 +338,7 @@ Distribution of p-values:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_2pop_default.jpg" width="400" />
 
-note the excess of p-values near 1, indicating poor fit of the left tail.
+note the excess of p-values near 1, indicating poor fit of the left tail. Unfortunately, this is a fault of OutFlank, "OutFLANK will not fit the left tail of the FST distribution well".
 
 7 pops:
 
@@ -346,6 +346,24 @@ note the excess of p-values near 1, indicating poor fit of the left tail.
 
 note that this distribution is uniform, indicating a good fit.
 
-but no outliers... as in no q-value < 0.05, but there are loci p-value < 0.05
+#### Outliers:
 
-Decrease right or left trim fraction? doesn't seem to change a damn thing
+For the 7 populations one: no outliers on default settings, and not even with qthreshold=0.1. thus, modified it the following way:
+
+Hmin = 0.05, qthreshold=0.1 ->123 outliers, Hmin = 0.05, qthreshold=0.1, righttrimfraction=0.1 -> 215
+
+Fit: (modified the above two ways leads to same plot)
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/outflank_7pops_q01_h005.jpg" width="400" />
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/FCT/p_hist_7pop_q01_h005.jpg" width="400" />
+
+For the 2 populations one: 2241 outliers with default settings  (q, Hmin, trims, everything) 
+
+I was worried about the distribution of my Fsts, the fit, and the p-value distribution. However, I found this tutorial where they had a similar distribution to mine and they still used it. to be fair the did LD pruning to make the fit better, but I am not gonna do that because LD in urchins is very low (https://rpubs.com/lotterhos/OutFLANK_cichlid_pruning), (LD citation: https://www.biorxiv.org/node/126985.full). Also, another paper used outflank with the same looking distribution with the same kind of fit: https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1008119.
+
+
+
+#### Annotating outliers with v5.0
+
+-> 1294 posi were annotated, 179 fell into promoters
