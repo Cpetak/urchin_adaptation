@@ -370,7 +370,7 @@ I was worried about the distribution of my Fsts, the fit, and the p-value distri
 
 #### Annotating outliers with v5.0
 
-I annotated the 2241 outlier SNPs using the following code: WGS/annotate_outs/annotate.py, process_raw available here
+I annotated the 2241 outlier SNPs using the following code: WGS/annotate_outs/annotate.py, process_raw available [here.](https://github.com/Cpetak/urchin_adaptation/blob/main/code/process_raw.py)
 
 ```bash
 awk -F "," '{print $2}' top_fst_2pops_default.csv > top_fst_2pops_loci # get only relevant column
@@ -407,7 +407,7 @@ print(loci.head())
 
 #ANNOTATING
 
-annot_df=process_raw.annotate_raw(df,loci) #function defined in process_raw.py
+annot_df=process_raw.annotate_raw(df,loci) #function defined in process_raw.py, goes through dataframe row by row and find position in annotation file downloaded from ncbi (.gff). all_annotations.txt is a cleaned version of that. available here: https://www.dropbox.com/s/ontctxfee9x7fe4/all_annotations.txt?dl=0
 annot_df.pos = annot_df.pos.astype(int)
 annot_df.to_csv("annotated01.csv") #basic annotation, includes overlaps
 annot_nooverl=annot_df[annot_df['region']!="genes_overlap"]
@@ -417,10 +417,10 @@ overl = annot_df[annot_df['region']=="genes_overlap"]
 overlapping_loci=process_raw.process_overlap(df,overl)
 cdf=pd.concat([annot_nooverl,overlapping_loci]) #for now we keep both genes if SNPs falls in both
 cdf.pos = cdf.pos.astype(int)
-cdf.to_csv("annotated02.csv") #basic annotation, overlaps are resolved
+cdf.to_csv("annotated02.csv") #basic annotation, overlaps are resolved - note: this results in 2 or more rows in output csv for the same position
 print("done processing overlaps annotation")
 
-promoters=process_raw.process_annotation_data(df)
+promoters=process_raw.process_annotation_data(df) #finds positions in promoter regions (within 5000bp of TSS)
 missing_annot = annot_df[annot_df['region']=="not_annot"]
 promoter_loci=process_raw.process_promoter(missing_annot,promoters)
 promoter_loci.pos = promoter_loci.pos.astype(int)
@@ -442,8 +442,9 @@ only_promoter_loci.to_csv("promoters.csv") #includes all SNP that fall in promot
 print("done done")
 ```
 
-
-
-
-
 -> 1294 posi were annotated, 179 fell into promoters
+
+ [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops.csv) (overlaps resolved)
+
+ [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/promoters_fst_2pops.csv)
+
