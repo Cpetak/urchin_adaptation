@@ -407,7 +407,7 @@ print(loci.head())
 
 #ANNOTATING
 
-annot_df=process_raw.annotate_raw(df,loci) #function defined in process_raw.py, goes through dataframe row by row and find position in annotation file downloaded from ncbi (.gff). all_annotations.txt is a cleaned version of that. available here: https://www.dropbox.com/s/ontctxfee9x7fe4/all_annotations.txt?dl=0
+annot_df=process_raw.annotate_raw(df,loci) #function defined in process_raw.py, goes through dataframe row by row and find position in annotation file downloaded from ncbi (.gff). available here: https://www.dropbox.com/s/ontctxfee9x7fe4/all_annotations.txt?dl=0
 annot_df.pos = annot_df.pos.astype(int)
 annot_df.to_csv("annotated01.csv") #basic annotation, includes overlaps
 annot_nooverl=annot_df[annot_df['region']!="genes_overlap"]
@@ -448,3 +448,4 @@ print("done done")
 
  [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/promoters_fst_2pops.csv)
 
+Topgo... but echinobase is down and I don't have the go annotations for the LOCs
