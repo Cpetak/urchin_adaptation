@@ -366,8 +366,84 @@ For the 2 populations one: 2241 outliers with default settings  (q, Hmin, trims,
 
 I was worried about the distribution of my Fsts, the fit, and the p-value distribution. However, I found this tutorial where they had a similar distribution to mine and they still used it. to be fair the did LD pruning to make the fit better, but I am not gonna do that because LD in urchins is very low (https://rpubs.com/lotterhos/OutFLANK_cichlid_pruning), (LD citation: https://www.biorxiv.org/node/126985.full). Also, another paper used outflank with the same looking distribution with the same kind of fit: https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1008119.
 
-
+### Results - 2 pops
 
 #### Annotating outliers with v5.0
+
+I annotated the 2241 outlier SNPs using the following code: WGS/annotate_outs/annotate.py, process_raw available here
+
+```bash
+awk -F "," '{print $2}' top_fst_2pops_default.csv > top_fst_2pops_loci # get only relevant column
+awk -F "," '$1 != "NA"' top_fst_2pops_loci > fixed_top
+mv fixed_top top_fst_2pops_loci
+```
+
+```python
+import pandas as pd
+from collections import Counter
+
+#PROCESSING DATA
+
+#process_raw and data files need to be in the folder you are running this script in
+
+import process_raw #import process_raw.py, also on github
+
+loci = pd.read_csv('top_fst_2pops_loci')
+df = pd.read_csv('all_annotations.txt', sep="\t", header=None, names=["chr","source","type","start","stop","s1","s2","s3","info"])
+df.drop(df[df['type'] == "region"].index, inplace = True)
+df['info'] = df['info'].str.replace(',',';') #will help with parsing region info
+
+# first column of loci df needs to be chr_pos for program to work
+#loci["posi"]=loci["posi"].astype(int)
+#loci["strpos"]=loci["posi"].astype(str)
+#loci["ID"]=loci["chr"]+"_"+loci["strpos"]
+#cols = list(loci.columns)
+#cols = [cols[-1]] + cols[:-1]
+#loci = loci[cols]
+
+#loci["posi"]=loci["posi"].astype(str)
+
+print(loci.head())
+
+#ANNOTATING
+
+annot_df=process_raw.annotate_raw(df,loci) #function defined in process_raw.py
+annot_df.pos = annot_df.pos.astype(int)
+annot_df.to_csv("annotated01.csv") #basic annotation, includes overlaps
+annot_nooverl=annot_df[annot_df['region']!="genes_overlap"]
+print("done basic annotation")
+
+overl = annot_df[annot_df['region']=="genes_overlap"]
+overlapping_loci=process_raw.process_overlap(df,overl)
+cdf=pd.concat([annot_nooverl,overlapping_loci]) #for now we keep both genes if SNPs falls in both
+cdf.pos = cdf.pos.astype(int)
+cdf.to_csv("annotated02.csv") #basic annotation, overlaps are resolved
+print("done processing overlaps annotation")
+
+promoters=process_raw.process_annotation_data(df)
+missing_annot = annot_df[annot_df['region']=="not_annot"]
+promoter_loci=process_raw.process_promoter(missing_annot,promoters)
+promoter_loci.pos = promoter_loci.pos.astype(int)
+print("done promoter processing")
+
+#CHECK POINT
+
+only_promoter_loci=promoter_loci[promoter_loci['region']!="not_annot"] #loci in promoters
+only_not_annot_prom=promoter_loci[promoter_loci['region']=="not_annot"] #loci not annotated even after promoter processing
+only_annot_new_df=annot_df[annot_df['region']!="not_annot"] #loci anywhere else
+
+check1=len(only_promoter_loci) + len(only_annot_new_df) + len(only_not_annot_prom)
+check2=len(loci)
+print("is everything in order?")
+print(check1)
+print(check2)
+
+only_promoter_loci.to_csv("promoters.csv") #includes all SNP that fall in promoters
+print("done done")
+```
+
+
+
+
 
 -> 1294 posi were annotated, 179 fell into promoters
