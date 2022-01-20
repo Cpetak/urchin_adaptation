@@ -448,4 +448,100 @@ print("done done")
 
  [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/promoters_fst_2pops.csv)
 
-Topgo... but echinobase is down and I don't have the go annotations for the LOCs
+Converted LOC to SPU using the GenePageGeneralInfo_AllGenes.txt file available on the echinobase.
+
+Code to make a mapping between LOC and SPU based on above file:
+
+```python
+import pandas as pd
+import json
+
+df=pd.read_csv("SPU_LOC_echino.txt", sep="\t", header=None, names=["ID","LOC","name","gen","test"]) # same as GenePageGeneralInfo_AllGenes.txt
+
+# building dictionary with SPU
+SPU_LOC={}
+for index,row in df.iterrows():
+  newlocs=[]
+  newspus=[]
+  for coli in ["ID","LOC","name","gen","test"]: #columns where there can be gene name
+    if "LOC" in str(row[coli]): #if you find LOC, there could still be SPU
+      stuff = row[coli].split("|")
+      if len(stuff) > 1:
+        locs=[i for i in stuff if "LOC" in i]
+        for l in locs:
+          newlocs.append(l.split(" ")[-1])
+        spus= [i for i in stuff if "SPU" in i]
+        for s in spus:
+          newspus.append(s)
+      else:
+        newlocs.append(row[coli].split(" ")[-1])
+
+    if "SPU" in str(row[coli]): #if you find SPU, there could still be LOC
+      x = row[coli].split("|")
+      locs=[i for i in x if "LOC" in i]
+      if len(locs)>0:
+        for l in locs:
+          newlocs.append(l.split(" ")[-1])
+      y=[i for i in x if "SPU" in i]
+      for s in y:
+        newspus.append(s)
+
+  for l in set(newlocs):
+    for s in set(newspus):
+      if l in SPU_LOC.keys():
+        SPU_LOC[l].append(s)
+      else:
+        SPU_LOC[l]=[s]
+
+with open('data.json', 'w') as fp:
+    json.dump(dict, fp)
+
+```
+
+dictionary is available here: TODO
+
+Then I used this dictionary to map my LOCs to SPUs. Problem: in a lot of cases more than 1 SPU corresponds to a LOC. For Enrichment, I'll use just one SPU at random (choose another if the program doesn't recognise it or doesn't have GO associated to it) - i am trying to see if there is a better way to choose the SPU
+
+TODO code for converting my LOC to SPU, also output file
+
+#### GO enrichment:
+
+1. First, I tried using this tool: http://geneontology.org/, BUT 99% of the SPUs were not recognised, classified as "unclassified"
+2. Then, I realised that the legacy echinobase has the GO term for each gene, this made a program to retrieve that. TODO get code here as well as output file -> now I have GO term for each of my SPU
+3. Realised that if I don't use an online tool with Spur info already loaded in above info is not enough, all GO term and associated gene information will be needed. oh well, maybe somehow above file will still be useful in the future.
+4. Found out that https://string-db.org/ can also do enrichment, all kinds, not just GO. I loaded in all SPUs (including duplicates) -> "there were no significant pathway enrichments observed in the following categories:
+   Biological Process (Gene Ontology), Molecular Function (Gene Ontology), Cellular  Component (Gene Ontology), Reference publications (PubMed), KEGG  Pathways, Reactome Pathways, WikiPathways, Protein Domains and Features  (InterPro)." But there were other enrichments, see screenshots on Desktop. Upon further inspection I realised that this is because they have very few genes associated with GO term in their database (a file in the downloads option). Same when I use the LOC gene names...
+5. Found this link really useful so check back here if all else fails: https://www.biostars.org/p/261816/
+6. Found a python package that looks easy to use, but as I mentioned in 3., I will need all GO terms with all associated genes to use this. COME BACK HERE when I have that, this is my best option right now. Plus comments in the biostars link. https://github.com/atarashansky/LightGOEA
+7. I could just wait for them to email me all the info I need in 6. BUT I found the uniprot has that info too! So now I am trying to download that... DOWNLOADED! https://www.ebi.ac.uk/QuickGO/annotations?taxonId=7668&taxonUsage=exact Yey, it seems like it is what i needed. now i just have to go from LOC to uniprotKB... uniprotKB has that information!!! on their gene page there is both uniprot ID and LOC. This is awesome because then I don't have to convert to SPU AND I don't have to use legacy.echinobase AND I don't have to wait for the data to be email to me... I'll still check it tho when it arrives. 
+
+code you might be looking for: https://colab.research.google.com/drive/1EV-LnwYhuEopIt9fyoZSLK9eFK0QJr54?usp=sharing
+
+TODO clean desktop, home and downloads
+
+#### Finding interesting genes:
+
+For searching in lists of biomineralisation, differentially expressed, etc genes, I'll use all SPU alternatives.
+
+- Biomineralisation genes: from Melissa's paper,  https://pubmed.ncbi.nlm.nih.gov/28141889/, IND
+- Differentially expressed genes:
+  - South vs North after common garden conditions, https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12036 IND
+  - Expression of genes of different populations in response to low pH, https://pubmed.ncbi.nlm.nih.gov/28141889/
+    - Genes differentially expressed between S. purpuratus populations following one day of exposure to low pH seawater, GENES UP-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO PH <7.8 & DOWN-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH <7.8, (DE_1.csv), GENES DOWN-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO  PH <7.8 & UP-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH  <7.8 (DE_2.csv)
+    - Genes differentially expressed between S. purpuratus populations following seven days of exposure to low pH seawater, GENES UP-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO PH  <7.8 & DOWN-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH  <7.8 (DE_3.csv), GENES DOWN-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO  PH <7.8 & UP-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH  <7.8, (DE_4)
+- Genes shown to be related to ph (i.e. SNPs correlated to pH conditions of pops), https://academic.oup.com/icb/article/53/5/857/733987 IND
+- Artificial selection low vs normal pH, 1 vs 7 days, allele frequencies that changed, https://www.pnas.org/content/110/17/6937, IND
+- Important genes:
+- Transcription factors:
+
+HOL TARTOK: I was going through my Melissa_supplementary folder, finished with 2017_expression, next up is 2019_extreme_alleles
+
+ALSO: I need to add these files above to GitHub from the downloads folder where they are currently at
+
+#### Annotating outliers with v3.1
+
+Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome/tools/remap
+
+Most successfully remapped: 54 failed out of 2241
+
+[remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops_remappedto3.1.txt) 
