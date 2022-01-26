@@ -366,4 +366,4 @@ For the 2 populations one: 2241 outliers with default settings  (q, Hmin, trims,
 
 I was worried about the distribution of my Fsts, the fit, and the p-value distribution. However, I found this tutorial where they had a similar distribution to mine and they still used it. to be fair the did LD pruning to make the fit better, but I am not gonna do that because LD in urchins is very low (https://rpubs.com/lotterhos/OutFLANK_cichlid_pruning), (LD citation: https://www.biorxiv.org/node/126985.full). Also, another paper used outflank with the same looking distribution with the same kind of fit: https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1008119.
 
-#### For analysis  (GO enrichment, Chi-squared, etc.) of outliers above and outliers coming from other tests (e.g. LFMM) visit this markdown:
+#### For analysis  (GO enrichment, Chi-squared, etc.) of outliers above and outliers coming from other tests (e.g. LFMM) visit : [this markdown](https://github.com/Cpetak/urchin_adaptation/blob/main/Step3.md)
