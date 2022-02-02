@@ -1,8 +1,8 @@
 # Analysis of outliers
 
-### Results - 2 pops
+## 2 pops per-site Fst values from Step 3
 
-#### Annotating outliers with v5.0
+### Annotating outliers with v5.0
 
 I annotated the 2241 outlier SNPs using the following code: WGS/annotate_outs/annotate.py, process_raw available [here.](https://github.com/Cpetak/urchin_adaptation/blob/main/code/process_raw.py)
 
@@ -76,13 +76,67 @@ only_promoter_loci.to_csv("promoters.csv") #includes all SNP that fall in promot
 print("done done")
 ```
 
--> 1294 posi were annotated, 179 fell into promoters
+There are 7 types of annotations:
 
- [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops.csv) (overlaps resolved)
+1. Gene body hits -> annotated01.csv, 
+2. Hits in gene body - gene body overlaps
+3. Promoter hits
+4. Hits in promoter - promoter overlaps
+5. Hits in gene body - promoter overlaps
+6. Hits in gene body - promoter - promoter overlaps
+7. Hits in gene body - gene body - promoter overlaps (rare, this annotation fill show pos as simple gene body - gene body overlap)
 
- [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/promoters_fst_2pops.csv)
 
-Converted LOC to SPU using the GenePageGeneralInfo_AllGenes.txt file available on the echinobase.
+
+
+
+-> 1293 NO BECAUSE GENES OVERLAP posi were annotated (not in promoter), 179 fell into promoters (of the remaining outliers)
+
+UPDATE ANNOTATE.PY and run!! Itt tartok 27/01/2022
+
+Of that 1293 posi 146 fell in a 3'UTR, 831 fell in an intron, 247 fell in an exon, 16 fell in an alternative UTR, 25 fell in a 5'UTR, 2 in a pseudogene, and 26 in lncRNA based on the annotation file from ncbi mentioned above.
+
+Of the 179 posi that fell in a promoter, 147 was in a promoter in front of a protein coding gene, 16 in front of an lncRNA, 4 in front of a tRNA, and for 8 it was in overlapping regions.
+
+179 + 16 = 187
+
+ [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/annotated02_fst_2pops.csv) (overlaps resolved)
+
+ [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/promoters_fst_2pops.csv)
+
+### GO enrichment
+
+1. First, I tried using this tool: http://geneontology.org/, BUT 99% of the SPUs were not recognised, classified as "unclassified"
+2. Then, I realised that the legacy echinobase has the GO term for each gene, this made a program to retrieve that. https://colab.research.google.com/drive/1dD9OVpyoZBj-E1cDitCeo0_kvJMX3c2e?usp=sharing. Didn't end up running as a) I found a better solution, b) I realsied I need the GO terms for each gene in the urchin genome, not just my genes of interest, for the GO enrichment to work.
+3. Found out that https://string-db.org/ can also do enrichment, all kinds, not just GO. TODO. Upon further inspection I realised that this might not work because the string database has very few genes associated with GO term (based on a file in the downloads option). 
+4. Found this link really useful so check back here if all else fails: https://www.biostars.org/p/261816/, also this is a potential package to use: https://github.com/atarashansky/LightGOEA
+5. To get the GO terms info I need, I emailed people at echinobase but they sent me a file that only had around 300 gene with associated GO terms.
+6. It turns out that Uniprot has GO terms associated to each gene in the urchin genome, here is the link to retrieve that info: https://www.ebi.ac.uk/QuickGO/annotations?taxonId=7668&taxonUsage=exact. Click on the export button. Saved as QuickGO-annotations-1642716310981-20220120.tsv
+7. used this code to transform uniprot - GO output file into the mapping file topGO expects:
+
+```bash
+awk -F "\t" '{print $2"\t"$5}' QuickGO-annotations-1642716310981-20220120.tsv > temp_mapping
+sed '$!N; /^\(.*\)\n\1$/!P; D' temp_mapping > temp2_mapping # It deletes duplicate, consecutive lines from a file
+awk 'BEGIN{FS="\t"} {for(i=2; i<=NF; i++) { if (!a[$1]) a[$1]=$1FS$i ;else a[$1]=a[$1]","$i};if ($1 != old) b[j++] = a[old];old=$1 } END{for (i=0; i<j; i++) print b[i] }' temp2_mapping > GO_mapping_topGO #it collapses repeated lines into 1, comma separated
+```
+
+8. I can convert LOC to UniprotID using this tool: https://www.uniprot.org/uploadlists/. select From Ensemble Genomes To uniprot
+
+TODO do above  step again, with correct LOCs, and replace this message:
+
+"934 out of 956 Ensembl Genomes identifiers were successfully mapped to 1769 UniProtKB  IDs in the table below." See colab for how i made the uniprotID list of "intereting genes"
+
+code you might be looking for: https://colab.research.google.com/drive/1EV-LnwYhuEopIt9fyoZSLK9eFK0QJr54?usp=sharing
+
+TODO clean desktop, home and downloads
+
+Then I used topGO...
+
+
+
+### SPU for supplementary data analysis
+
+Converted LOC (the ones with outliers in their gene bodies, no lncRNA but also promoter regions) to SPU using the GenePageGeneralInfo_AllGenes.txt file available on the echinobase.
 
 Code to make a mapping between LOC and SPU based on above file:
 
@@ -138,39 +192,6 @@ Then I used this dictionary to map my LOCs to SPUs. Problem: in a lot of cases m
 
 TODO code for converting my LOC to SPU, also output file
 
-#### GO enrichment:
-
-1. First, I tried using this tool: http://geneontology.org/, BUT 99% of the SPUs were not recognised, classified as "unclassified"
-2. Then, I realised that the legacy echinobase has the GO term for each gene, this made a program to retrieve that. TODO get code here as well as output file -> now I have GO term for each of my SPU
-3. Realised that if I don't use an online tool with Spur info already loaded in above info is not enough, all GO term and associated gene information will be needed. oh well, maybe somehow above file will still be useful in the future.
-4. Found out that https://string-db.org/ can also do enrichment, all kinds, not just GO. I loaded in all SPUs (including duplicates) -> "there were no significant pathway enrichments observed in the following categories:
-   Biological Process (Gene Ontology), Molecular Function (Gene Ontology), Cellular  Component (Gene Ontology), Reference publications (PubMed), KEGG  Pathways, Reactome Pathways, WikiPathways, Protein Domains and Features  (InterPro)." But there were other enrichments, see screenshots on Desktop. Upon further inspection I realised that this is because they have very few genes associated with GO term in their database (a file in the downloads option). Same when I use the LOC gene names...
-5. Found this link really useful so check back here if all else fails: https://www.biostars.org/p/261816/
-6. Found a python package that looks easy to use, but as I mentioned in 3., I will need all GO terms with all associated genes to use this. COME BACK HERE when I have that, this is my best option right now. Plus comments in the biostars link. https://github.com/atarashansky/LightGOEA
-7. I could just wait for them to email me all the info I need in 6. BUT I found the uniprot has that info too! So now I am trying to download that... DOWNLOADED! https://www.ebi.ac.uk/QuickGO/annotations?taxonId=7668&taxonUsage=exact Yey, it seems like it is what i needed. now i just have to go from LOC to uniprotKB... uniprotKB has that information!!! on their gene page there is both uniprot ID and LOC. This is awesome because then I don't have to convert to SPU AND I don't have to use legacy.echinobase AND I don't have to wait for the data to be email to me... I'll still check it tho when it arrives. 
-
-
-
-8. I will use topGo and I can convert LOC to UniprotID using this tool: https://www.uniprot.org/uploadlists/. select From Ensemble Genomes To uniprot
-
-9. used this code to transform uniprot - GO output file into the mapping file topGO expects:
-
-   ```bash
-   awk -F "\t" '{print $2"\t"$5}' QuickGO-annotations-1642716310981-20220120.tsv > temp_mapping
-   sed '$!N; /^\(.*\)\n\1$/!P; D' temp_mapping > temp2_mapping # It deletes duplicate, consecutive lines from a file
-   awk 'BEGIN{FS="\t"} {for(i=2; i<=NF; i++) { if (!a[$1]) a[$1]=$1FS$i ;else a[$1]=a[$1]","$i};if ($1 != old) b[j++] = a[old];old=$1 } END{for (i=0; i<j; i++) print b[i] }' temp2_mapping > GO_mapping_topGO #it collapses repeated lines into 1, comma separated
-   ```
-
-10. translated LOCs to uniprot IDs using above link
-
-"934 out of 956 Ensembl Genomes identifiers were successfully mapped to 1769 UniProtKB  IDs in the table below." See colab for how i made the uniprotID list of "intereting genes"
-
-
-
-code you might be looking for: https://colab.research.google.com/drive/1EV-LnwYhuEopIt9fyoZSLK9eFK0QJr54?usp=sharing
-
-TODO clean desktop, home and downloads
-
 #### Finding interesting genes:
 
 For searching in lists of biomineralisation, differentially expressed, etc genes, I'll use all SPU alternatives.
@@ -190,7 +211,7 @@ HOL TARTOK: I was going through my Melissa_supplementary folder, finished with 2
 
 ALSO: I need to add these files above to GitHub from the downloads folder where they are currently at
 
-#### Annotating outliers with v3.1
+### Annotating outliers with v3.1 for regulatory regions
 
 Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome/tools/remap
 
