@@ -1,111 +1,119 @@
-
 import pandas as pd
 from collections import Counter
 
-def annotate_raw(annotation_df, loci):
-  new_df=pd.DataFrame() #output dataframe with corresponding region for each high Fst locus
+def annotate_raw(annotation_df, loci, one_length_print=False):
+    # if one_length_print is true, we don't care about situation when the annotation file has only one entries for a hit, if that hit is a gene, if we are doing the double checking step with the promoter extended annotation file
 
-  for index, row in loci.iterrows(): #go through all high Fst loci
-      ch = row[0].split("_")[:2]
-      ch = "_".join(ch) #get chromosome
-      pos = int(row[0].split("_")[2]) #get position for loci
-      temp=annotation_df[(annotation_df['chr']==ch) & (annotation_df['start']<=pos) & (annotation_df['stop']>=pos)] #get rows in annotation file where our loci is between start and stop
-      if len(temp) == 0:
-          #locus is not annotated
-          new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "not_annot", "gene" : "NA"},
-                          ignore_index = True)
-      if len(temp) == 1:
-          #the annotation file ususally has mulitple lines belonging to a certain annotated region
-          #e.g. for a gene, exon information is in a separate line
-          #this is rare so I print if this is the case and inspect individual cases
-          print("ERROR: Only one line in annotation file, type of annotation:")
-          print(temp['type'])
+    new_df=pd.DataFrame() #output dataframe with corresponding region for each high Fst locus
 
-      if len(temp) > 1:
-          #checking if it is a known region, and if yes, if there are overlapping regions
-          ids=[]
-          for i in range(len(temp)):
-              t=temp["info"].iloc[i].split(";")
-              res = list(filter(lambda x: "LOC" in x, t))
-              if len(res) == 0:
-                  res = list(filter(lambda x: "GeneID:" in x, t))
-                  if len(res) != 0:
-                      ID = res[0].split("GeneID:",1)[1]
-                      ids.append(ID)
-              else:
-                  ID =res[0].split("LOC",1)[1]
-                  ids.append(ID)
-          #ids is a list of IDs we found in the rows where our loci is between start and stop
-          uni=len(Counter(ids))
-
-          if uni > 1:
-              #if there is more than 1 kind of gene ID, there are overlapping genes, investigate cases separately
-              new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "genes_overlap", "gene": "NA"},
-                          ignore_index = True)
-
-          gene_name = ids[0] #technically it might not be a gene
-
-          if uni == 1:
-              #if there is only one kind of region
-              #checking what kind of region
-              if temp['type'].str.contains('gene').any():
-                if temp['type'].str.contains('pseudogene').any():
-                      new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "pseudogene", "gene":"NA" },ignore_index = True)
-                # snRNA, tRNA, lnc_RNA, snoRNA, rRNA, miRNA also have line with "gene"
-                elif temp['type'].str.contains('snRNA').any():
-                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "snRNA", "gene":ids[0] },ignore_index = True)
-                elif temp['type'].str.contains('tRNA').any():
-                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "tRNA", "gene":ids[0] },ignore_index = True)
-                elif temp['type'].str.contains('lnc_RNA').any():
-                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "lnc_RNA", "gene":ids[0] },ignore_index = True)
-                elif temp['type'].str.contains('snoRNA').any():
-                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "snoRNA", "gene":ids[0] },ignore_index = True)
-                elif temp['type'].str.contains('rRNA').any():
-                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "rRNA", "gene":ids[0] },ignore_index = True)
-                elif temp['type'].str.contains('miRNA').any():
-                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "miRNA", "gene":ids[0] },ignore_index = True)
+    for index, row in loci.iterrows(): #go through all high Fst loci
+        ch = row[0].split("_")[:2]
+        ch = "_".join(ch) #get chromosome
+        pos = int(row[0].split("_")[2]) #get position for loci
+        temp=annotation_df[(annotation_df['chr']==ch) & (annotation_df['start']<=pos) & (annotation_df['stop']>=pos)] #get rows in annotation file where our loci is between start and stop
+        #print(len(temp))
+        if len(temp) == 0:
+            #print("went into len == 0")
+            #locus is not annotated
+            new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "not_annot", "gene" : "NA"}, ignore_index = True)
+        if len(temp) == 1:
+            #print("went into len ==1")
+            #the annotation file ususally has mulitple lines belonging to a certain annotated region
+            #e.g. for a gene, exon information is in a separate line
+            #this is rare so I print if this is the case and inspect individual cases
+            if one_length_print:
+                if list(temp['type'])[0] != "gene":
+                    print("ERROR: Only one line in annotation file, type of annotation:")
+                    print(list(temp['type'])[0])
+            else:
+                if list(temp['type'])[0] == "pseudogene":
+                    new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "pseudogene", "gene" : "NA"}, ignore_index = True)
                 else:
-                  if temp['type'].str.contains('exon').any():
-                      if temp['type'].str.contains('CDS').any():
-                          #in exon
-                          new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "exon", "gene":f"LOC{ids[0]}" },ignore_index = True)
-                      else:
-                          direction=temp['s2'].iloc[0]
-                          e_start=temp[temp["type"]=="exon"].iloc[0].start
-                          e_stop=temp[temp["type"]=="exon"].iloc[0].stop
-                          g_start=temp[temp["type"]=="gene"].iloc[0].start
-                          g_stop=temp[temp["type"]=="gene"].iloc[0].stop
-                          if direction == "+":
-                              if e_start == g_start:
-                                  #print('5prime1')
-                                  new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "5'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
-                              elif e_stop == g_stop:
-                                  #print("3prime1")
-                                  new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "3'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
-                              else:
-                                  #print("ERROR1") #alternative UTR, inspect separately
-                                  #print(temp)
-                                  new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":"NA" },ignore_index = True)
-                          elif direction == "-":
-                              if e_start == g_start:
-                                  #print('3prime2')
-                                  new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "3'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
-                              elif e_stop == g_stop:
-                                  #print("5prime2")
-                                  new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "5'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
-                              else:
-                                  #print("ERROR2") #alternative UTR, inspect separately
-                                  new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":"NA" },ignore_index = True)
-                          else:
-                              print("ERROR3") #this should never return
+                    print("ERROR: Only one line in annotation file, type of annotation:")
+                    print(list(temp['type'])[0])
 
-                  else:
-                      #in intron
-                      new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "intron", "gene":f"LOC{ids[0]}" },ignore_index = True)
+        if (len(temp) > 1 or one_length_print) and (len(temp) != 0):
+            #print("went into main if, len > 1")
+            #checking if it is a known region, and if yes, if there are overlapping regions
+            ids=[]
+            for i in range(len(temp)):
+                t=temp["info"].iloc[i].split(";")
+                res = list(filter(lambda x: "LOC" in x, t))
+                if len(res) == 0:
+                    res = list(filter(lambda x: "GeneID:" in x, t))
+                    if len(res) != 0:
+                        ID = res[0].split("GeneID:",1)[1]
+                        ids.append(ID)
+                else:
+                    ID =res[0].split("LOC",1)[1]
+                    ids.append(ID)
+            #ids is a list of IDs we found in the rows where our loci is between start and stop
+            uni=len(Counter(ids))
+            if uni > 1:
+                #if there is more than 1 kind of gene ID, there are overlapping genes, investigate cases separately
+                new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "genes_overlap", "gene": "NA"}, ignore_index = True)
 
-              else:
-                  print("not gene")
-  return new_df
+            gene_name = ids[0] #technically it might not be a gene
+
+            if uni == 1:
+                #if there is only one kind of region
+                #checking what kind of region
+                if temp['type'].str.contains('gene').any():
+                    if temp['type'].str.contains('pseudogene').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "pseudogene", "gene":"NA" },ignore_index = True)
+                    # snRNA, tRNA, lnc_RNA, snoRNA, rRNA, miRNA also have line with "gene"
+                    elif temp['type'].str.contains('snRNA').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "snRNA", "gene":ids[0] },ignore_index = True)
+                    elif temp['type'].str.contains('tRNA').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "tRNA", "gene":ids[0] },ignore_index = True)
+                    elif temp['type'].str.contains('lnc_RNA').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "lnc_RNA", "gene":ids[0] },ignore_index = True)
+                    elif temp['type'].str.contains('snoRNA').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "snoRNA", "gene":ids[0] },ignore_index = True)
+                    elif temp['type'].str.contains('rRNA').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "rRNA", "gene":ids[0] },ignore_index = True)
+                    elif temp['type'].str.contains('miRNA').any():
+                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "miRNA", "gene":ids[0] },ignore_index = True)
+                    else:
+                        if temp['type'].str.contains('exon').any():
+                            if temp['type'].str.contains('CDS').any():
+                                #in exon
+                                new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "exon", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                            else:
+                                direction=temp['s2'].iloc[0]
+                                e_start=temp[temp["type"]=="exon"].iloc[0].start
+                                e_stop=temp[temp["type"]=="exon"].iloc[0].stop
+                                g_start=temp[temp["type"]=="gene"].iloc[0].start
+                                g_stop=temp[temp["type"]=="gene"].iloc[0].stop
+                                if direction == "+":
+                                    if e_start == g_start:
+                                        #print('5prime1')
+                                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "5'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                                    elif e_stop == g_stop:
+                                        #print("3prime1")
+                                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "3'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                                    else:
+                                        #print("ERROR1") #alternative UTR, inspect separately
+                                        #print(temp)
+                                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                                elif direction == "-":
+                                    if e_start == g_start:
+                                        #print('3prime2')
+                                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "3'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                                    elif e_stop == g_stop:
+                                        #print("5prime2")
+                                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "5'UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                                    else:
+                                        #print("ERROR2") #alternative UTR, inspect separately
+                                        new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                                else:
+                                    print("ERROR3") #this should never return
+                        else:
+                            #in intron
+                            new_df = new_df.append({'chr' : ch, 'pos' : pos, 'region' : "intron", "gene":f"LOC{ids[0]}" },ignore_index = True)
+                else:
+                    print("not gene")
+    return new_df
 
 def annotate_raw_region(annotation_df, loci): #use this function instead if not using single SNPs, instead regions, and want to see if region is superset of gene in annotation file
   new_df=pd.DataFrame() #output dataframe with corresponding region for each high Fst locus
@@ -287,7 +295,7 @@ def process_overlap(annotation_df,overl_df):
                                     else:
                                         #print("ERROR1") #alternative UTR?
                                         #print(gt)
-                                        new_df2 = new_df2.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":"NA" },ignore_index = True)
+                                        new_df2 = new_df2.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":f"LOC{i}" },ignore_index = True)
                                 elif direction == "-":
                                     if e_start == g_start:
                                         #print('3prime2')
@@ -297,7 +305,7 @@ def process_overlap(annotation_df,overl_df):
                                         new_df2 = new_df2.append({'chr' : ch, 'pos' : pos, 'region' : "5'UTR", "gene":f"LOC{i}" },ignore_index = True)
                                     else:
                                         #print("ERROR2")
-                                        new_df2 = new_df2.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":"NA" },ignore_index = True)
+                                        new_df2 = new_df2.append({'chr' : ch, 'pos' : pos, 'region' : "alternative UTR", "gene":f"LOC{i}" },ignore_index = True)
                                 else:
                                     print("ERROR3")
                                     print(temp)
@@ -415,3 +423,4 @@ def check_enhancers(only_not_annot_prom, atac, chip, lvar,lnc):
             enh_check = enh_check.append({'chr' : ch, 'pos' : pos, 'region' : "lnc" },ignore_index = True)
 
     return enh_check
+
