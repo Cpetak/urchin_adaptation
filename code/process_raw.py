@@ -329,8 +329,8 @@ def process_annotation_data(annotation_df):
 
     imp_list=["gene","snRNA", "tRNA", "lnc_RNA", "snoRNA", "rRNA", "miRNA"] #regions in front of these regions will be labelled as promoter
     for l in imp_list:
-        promoters.loc[(promoters["type"]==l) & (promoters["s2"]=="+"), "start"] -= 5000
-        promoters.loc[(promoters["type"]==l) & (promoters["s2"]=="-"), "stop"] += 5000
+        promoters.loc[(promoters["type"]==l) & (promoters["s2"]=="+"), "start"] -= 2000
+        promoters.loc[(promoters["type"]==l) & (promoters["s2"]=="-"), "stop"] += 2000
 
     promoters['info'] = promoters['info'].str.replace(',',';')
 
@@ -423,4 +423,3 @@ def check_enhancers(only_not_annot_prom, atac, chip, lvar,lnc):
             enh_check = enh_check.append({'chr' : ch, 'pos' : pos, 'region' : "lnc" },ignore_index = True)
 
     return enh_check
-

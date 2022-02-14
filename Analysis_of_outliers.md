@@ -2,7 +2,9 @@
 
 ## 2 pops per-site Fst values from Step 3
 
-### Annotating outliers with v5.0
+### Chi-squared for regions
+
+#### Annotating outliers with v5.0 for nonregulatory variation
 
 I annotated the 2241 outlier SNPs using the following code: WGS/annotate_outs/annotate.py, process_raw available [here.](https://github.com/Cpetak/urchin_adaptation/blob/main/code/process_raw.py)
 
@@ -139,33 +141,49 @@ only_promoter_loci.to_csv("promoters01.csv") #includes all SNP that fall in prom
 print("done done")
 ```
 
-There are 7 types of annotations:
+There are 6 types of annotations:
 
 1. Gene body hits -> annotated01.csv, 
-2. Hits in gene body - gene body overlaps
-3. Promoter hits
-4. Hits in promoter - promoter overlaps
-5. Hits in gene body - promoter overlaps
-6. Hits in gene body - promoter - promoter overlaps
-7. Hits in gene body - gene body - promoter overlaps (rare, this annotation fill show pos as simple gene body - gene body overlap)
-
-
-
-
-
--> 1293 NO BECAUSE GENES OVERLAP posi were annotated (not in promoter), 179 fell into promoters (of the remaining outliers)
-
-UPDATE ANNOTATE.PY and run!! Itt tartok 27/01/2022
-
-Of that 1293 posi 146 fell in a 3'UTR, 831 fell in an intron, 247 fell in an exon, 16 fell in an alternative UTR, 25 fell in a 5'UTR, 2 in a pseudogene, and 26 in lncRNA based on the annotation file from ncbi mentioned above.
-
-Of the 179 posi that fell in a promoter, 147 was in a promoter in front of a protein coding gene, 16 in front of an lncRNA, 4 in front of a tRNA, and for 8 it was in overlapping regions.
-
-179 + 16 = 187
+2. Hits in gene body - gene body overlaps are resolved into separate lines -> annotated02.csv
+3. Promoter hits -> promoters01.csv
+4. Hits in promoter - promoter overlaps resolved into separate lines ->  promoters02.csv
+5. Hits in gene body - promoter overlaps  and hits in gene body - promoter - promoter overlaps -> promoter_gene_overl.csv
+7. Hits in gene body - gene body - promoter overlaps (rare, this annotation still shows pos as simple gene body - gene body overlap)
 
  [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/annotated02_fst_2pops.csv) (overlaps resolved)
 
  [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/promoters_fst_2pops.csv)
+
+TODO more strick promoter definition? 2000 bp? Khor 2021
+
+#### Annotating outliers with v3.1 for regulatory regions
+
+Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome/tools/remap
+
+Opened top_fst_2pops_loci in Visual Studio Code, and from there I copied into space in link above. Had to remove qutation marks and ".1" from the end of the chromosome numbers. Chr, pos space separated.
+
+Most successfully remapped: 54 failed out of 2241, some mapped to multiple regions.
+
+[remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops_remappedto3.1.txt) 
+
+Regulatory regions:
+
+* ATAC-seq DONE
+* DNA-seq DONE
+* Chip-seq DONE
+* Lvar similarity DONE
+* Also Arenas-Mena 2021 DONE https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-021-07936-0
+* Enhancer RNA dataset Khor 2021 DONE
+
+Additional: lncRNA DONE
+
+TODO when available: echinobase CRE experimentally validate data, supp of Khor 2021, Computational ID, TFBS
+
+
+
+#### Putting it together for final analysis
+
+
 
 ### GO enrichment
 
@@ -218,7 +236,7 @@ showSigOfNodes(GOdata, score(resultFisher), firstSigNodes = 10, useInfo = 'all')
 
 ```
 
-only thing left is echino attempt
+only thing left is echino attempt and results
 
 ### SPU for supplementary data analysis
 
@@ -297,10 +315,3 @@ HOL TARTOK: I was going through my Melissa_supplementary folder, finished with 2
 
 ALSO: I need to add these files above to GitHub from the downloads folder where they are currently at
 
-### Annotating outliers with v3.1 for regulatory regions
-
-Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome/tools/remap
-
-Most successfully remapped: 54 failed out of 2241
-
-[remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops_remappedto3.1.txt) 
