@@ -70,7 +70,9 @@ print(len(df[(df["check"]!=0) & (df["promoter"]==0)])) #should be 0
 
 df.to_csv("gathered_annotation.csv")
 tdf=df[df["Not_annot"]==1]
-tdf.to_csv("input_for_extra_regannot.csv") # to be translated into the 3.1 version
+tdf.to_csv("input_for_extra_regannot_notannot.csv") # to be translated into the 3.1 version
+t2df=df[df["intron"]!=0]
+t2df.to_csv("input_for_extra_regannot_intron.csv") # enhancer could also be in introns. if in intron and only in ATAC/DNAseq don't count as enhancer...
 
 # now if I do sum across a column, I get the total number of eg intron hits (so more than one if a pos fell in intron-inton overlap)
 # if instead I do intron != 0 I get number of pos that fell into an intron

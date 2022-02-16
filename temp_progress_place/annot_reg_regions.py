@@ -67,7 +67,7 @@ print(len(df[df.isnull().any(axis=1)])) # should be 0
 external_data=["arenas_mena_lit.csv", "ATAC_all_24h.csv", "ATAC_both_PMC_other_24h.csv", "ATAC_other_24h.csv", "ATAC_PMC_24h.csv", "Chip_all_peaks.csv", "DNAseq_PMCminus.csv", "DNAseq_PMCplus.csv", "eRNA_all.csv", "lytVar22_strPur31_48_50.tsv", "lytVar22_strPur31_49_50.tsv", "lytVar22_strPur31_50_50.tsv", "sp4.lncRNAs.bed"]
 
 def check_lnc(mydf, theirdf, enhdf, label):
-  for index, row in mydf.head(500).iterrows():
+  for index, row in mydf.iterrows():
     #print(index)
     ch = row.mapped_id
     pos = row.mapped_start
@@ -80,7 +80,7 @@ def check_lnc(mydf, theirdf, enhdf, label):
   return enhdf
 
 def check_enhancers(mydf, theirdf, enhdf, label):
-  for index, row in mydf.head(500).iterrows():
+  for index, row in mydf.iterrows():
     #print(index)
     ch = row.mapped_id
     pos = row.mapped_start
@@ -90,7 +90,7 @@ def check_enhancers(mydf, theirdf, enhdf, label):
   return enhdf
 
 def check_enhancers_2(mydf, theirdf, enhdf, label):
-  for index, row in mydf.head(500).iterrows():
+  for index, row in mydf.iterrows():
     #print(index)
     ch = row.source_id
     pos = row.source_start

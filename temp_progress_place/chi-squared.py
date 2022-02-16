@@ -7,7 +7,8 @@ import numpy as np
 
 df=pd.read_csv("gathered_annotation.csv")
 additional_lnc=pd.read_csv("lncdf.csv")
-enhancers=pd.read_csv("reg_regions_withconfidence.csv")
+notannot_enhancers=pd.read_csv("reg_regions_withconfidence.csv")
+intronic_enhancers=pd.read_csv("reg_regions_withconfidence_introns.csv")
 
 """first, the two extremes
 
@@ -22,7 +23,7 @@ num_5UTR=len(df[df["5'UTR"]!=0])
 num_intron=len(df[df["intron"]!=0])
 num_other=len(df[(df["pseudogene"]!=0) & (df["alternative UTR"]!=0)])
 num_lnc=len(df[df["lnc_RNA"]!=0]) + len(additional_lnc)
-num_enhancer=len(enhancers[enhancers["confidence"]>1]) ??
+num_enhancer=len(notannot_enhancers[notannot_enhancers["confidence"]>0]) + len(intronic_enhancers[intronic_enhancers["confidence"]>0])
 num_promoter=len(df[df["promoter"]!=0]) # could overlap with other promoter as well as gene
 num_noncoding=len(df[df["Not_annot"]==1])
 all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_promoter,num_noncoding] # num_other?
@@ -34,13 +35,12 @@ print((sum(all_all_hit)-len(df))/len(df)*100) # it is this percent of an increas
 #calculated based on https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Strongylocentrotus_purpuratus/102/
 #count times mean length (bp)
 
-bp_exon=87323990
-bp_3UTR=40771628
-bp_5UTR=10192907
-bp_intron=412196958
-#num_other??
-#bp_lnc=15513236 #(including both annotation data from ncbi AND extra lnc_RNA file)
-bp_lnc=4850968 #only from ncbi
+bp_exon=87323990 # double checked
+bp_3UTR=40771628 # double checked
+bp_5UTR=10192907 # double checked
+bp_intron=412196958 # double checked
+bp_lnc_paper= # number of basepairs (no double counting due to overlaps) from paper
+bp_lnc_ncbi=4850968 #only from ncbi
 bp_promoter=32947 * 2000 #this is based on the hypothesis that promoter = 2kb upstream gene
 bp_noncoding=921855793-bp_exon-bp_lnc-bp_promoter-bp_intron-bp_3UTR-bp_5UTR
 all_len=[bp_exon,bp_3UTR,bp_5UTR,bp_intron,bp_lnc,bp_promoter,bp_noncoding]
