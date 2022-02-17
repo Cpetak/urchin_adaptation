@@ -150,23 +150,25 @@ There are 6 types of annotations:
 5. Hits in gene body - promoter overlaps  and hits in gene body - promoter - promoter overlaps -> promoter_gene_overl.csv
 7. Hits in gene body - gene body - promoter overlaps (rare, this annotation still shows pos as simple gene body - gene body overlap)
 
- [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/annotated02_fst_2pops.csv) (overlaps resolved)
+ [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/annotated02_fst_2pops.csv) (overlaps resolved) TODO update these links
 
  [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/promoters_fst_2pops.csv)
 
-TODO more strick promoter definition? 2000 bp? Khor 2021
+TODO rerun as I changed promoter = 5000kb to 2000kb
+
+I gathered all of the above annotation data into one big dataframe using the gather_annot_info.py code. This created a dataframe with all outlier loci as rows and columns containing region information such as intron, promoter, etc with a number representing how many of these regions each loci "hit". So for example if a locus was found in 2 overlapping promoter regions, the whole row has 0s except for the promoter column which says 2. From this dataframe, I then extracted rows that were not annotated at all. -> input_for_extra_regannot_notannot.csv, Loci in this file were converted to v3.1 as follows. 
 
 #### Annotating outliers with v3.1 for regulatory regions
 
 Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome/tools/remap
 
-Opened top_fst_2pops_loci in Visual Studio Code, and from there I copied into space in link above. Had to remove qutation marks and ".1" from the end of the chromosome numbers. Chr, pos space separated.
+Opened input_for_extra_regannot_notannot.csv in Visual Studio Code, and from there I copied into space in link above. Had to remove qutation marks and ".1" from the end of the chromosome numbers. Chr, pos space separated.
 
-Most successfully remapped: 54 failed out of 2241, some mapped to multiple regions.
+Most successfully remapped: 54 failed out of 2241, some mapped to multiple regions. #TODO update this
 
-[remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops_remappedto3.1.txt) 
+[remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops_remappedto3.1.txt) #TODO update all links in this markdown
 
-Regulatory regions:
+Regulatory regions: #TODO find citations for each of these
 
 * ATAC-seq DONE
 * DNA-seq DONE
@@ -179,11 +181,17 @@ Additional: lncRNA DONE
 
 TODO when available: echinobase CRE experimentally validate data, supp of Khor 2021, Computational ID, TFBS
 
+For the above, some files contained overlaps within regions, I resolved these using the check_overlap_within_df.py.
 
+Then, the files above along with the input_for_extra_regannot_notannot_3.1.csv file were the input to the annot_reg_regions.py program. -> output list of positions that fell in an lncRNA region, and another list of positions that fell in any of the regulatory regions instead (ATAC, Chip, L.var, etc.).
 
 #### Putting it together for final analysis
 
+Chi-squared analysis was run as shown in chi-squared.py. It takes gathered_annotation.csv (output of gather_annot_info.py), lncdf.csv and reg_regions_withconfidence.csv (output of annot_reg_regions.py). 
 
+To get the total number of lncRNA nucleotides (for expected number of hits in chi-squared): overlap processed with check_overlap_within_df.py, then gff annotation (processed with filtering_annotation_forlist.py to account for promoters) was subtracted with take_out_gff_from_lncrna.py. Note: sp4.lncRNAs_overlap_processed.csv was first converted from 3.1 to 5.0. Then, each region's length was calculated and summed, together with the number of nucleotides for lncRNA in ncbi. Final number: 17,703,544
+
+To get the total number of enhancer nucleotides (for expected number of hits in chi-squared): overlapped regions from all different resources (ATAC, Chip, etc) into 1 file using the get_enhancer_overlaps.py code (regulatory_regions_lit_review folder, output overlapped_enhancers.csv). Then, I subtracted regions in lncRNA (additional file) and gff (processed as above). Gff file was translated into version 3.1. USED CODE X.
 
 ### GO enrichment
 
@@ -236,7 +244,7 @@ showSigOfNodes(GOdata, score(resultFisher), firstSigNodes = 10, useInfo = 'all')
 
 ```
 
-only thing left is echino attempt and results
+Echinobase was down but they emailed them and they sent me a file with around 300 genes with associated GO terms, called GeneGoTerms.txt. The genes were in a GENEPAGE number format, so first I translated my LOC list into a GENEPAGE list using the SPU_LOC_echino.txt file and this code: https://colab.research.google.com/drive/19pi5vPVcZvd_OfEzFTj0XaQnnCVox0yc?usp=sharing -> made a json file to map from LOC to GENEPAGE, LOC2GENEPAGE.json, and mapped all my LOCs into GENEPAGE -> GENEPAGE_fst_2pops.txt. Also made a file with all of the GO terms and associated GENEPAGE numbers in a format topGO expects (i.e. the gene universe) -> GO_mapping_topGO_echinoGENEPAGE. This, however, didn't go anywhere as I said, this only included a total of ~300 genes... all of these files are in Echinobase_GO_stuff
 
 ### SPU for supplementary data analysis
 

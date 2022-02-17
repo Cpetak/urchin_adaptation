@@ -39,7 +39,7 @@ def get_scaff_num(nscaffold):
 #with open("NW_to_scaf.json", "w") as outfile:
     #json.dump(NW_to_scaf, outfile)
 
-with open('NW_to_scaf.json', 'r') as f:
+with open('NW_to_scaf.json', 'r') as f: # saved most already to a file because get_scaff_num takes a while to run
   NW_to_scaf = json.load(f)
 
 checklist=[]
