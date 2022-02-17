@@ -423,3 +423,4 @@ def check_enhancers(only_not_annot_prom, atac, chip, lvar,lnc):
             enh_check = enh_check.append({'chr' : ch, 'pos' : pos, 'region' : "lnc" },ignore_index = True)
 
     return enh_check
+

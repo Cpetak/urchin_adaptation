@@ -1,162 +1,29 @@
 # Analysis of outliers
 
-## 2 pops per-site Fst values from Step 3
+## 2 pops per-site Fst values from Step 3 (as example)
 
 ### Chi-squared for regions
 
 #### Annotating outliers with v5.0 for nonregulatory variation
 
-I annotated the 2241 outlier SNPs using the following code: WGS/annotate_outs/annotate.py, process_raw available [here.](https://github.com/Cpetak/urchin_adaptation/blob/main/code/process_raw.py)
+I annotated the 2241 outlier SNPs using the following code: [annotate.py](https://github.com/Cpetak/urchin_adaptation/blob/main/code/annotate.py), which uses [process_raw.](https://github.com/Cpetak/urchin_adaptation/blob/main/code/process_raw.py)
 
 ```bash
 awk -F "," '{print $2}' top_fst_2pops_default.csv > top_fst_2pops_loci # get only relevant column
 awk -F "," '$1 != "NA"' top_fst_2pops_loci > fixed_top
-mv fixed_top top_fst_2pops_loci
+mv fixed_top top_fst_2pops_loci # this was then the input to annotate.py
 ```
 
-```python
-import pandas as pd
-from collections import Counter
-
-#PROCESSING DATA
-
-#process_raw and data files need to be in the folder you are running this script in
-
-import process_raw #import process_raw.py, also on github
-
-loci = pd.read_csv('top_fst_2pops_loci')
-df = pd.read_csv('all_annotations.txt', sep="\t", header=None, names=["chr","source","type","start","stop","s1","s2","s3","info"])
-df.drop(df[df['type'] == "region"].index, inplace = True)
-df['info'] = df['info'].str.replace(',',';') #will help with parsing region info
-
-# first column of loci df needs to be chr_pos for program to work
-#loci["posi"]=loci["posi"].astype(int)
-#loci["strpos"]=loci["posi"].astype(str)
-#loci["ID"]=loci["chr"]+"_"+loci["strpos"]
-#cols = list(loci.columns)
-#cols = [cols[-1]] + cols[:-1]
-#loci = loci[cols]
-#loci["posi"]=loci["posi"].astype(str)
-
-#ANNOTATING
-
-annot_df=process_raw.annotate_raw(df,loci, one_length_print=False) #function defined in process_raw.py
-annot_df.pos = annot_df.pos.astype(int)
-annot_df.to_csv("annotated01.csv") #basic annotation, includes overlaps in one row
-annot_nooverl=annot_df[annot_df['region']!="genes_overlap"]
-print("done basic annotation")
-
-overl = annot_df[annot_df['region']=="genes_overlap"]
-overlapping_loci=process_raw.process_overlap(df,overl)
-cdf=pd.concat([annot_nooverl,overlapping_loci]) #for now we keep both genes if SNPs falls in both
-cdf.pos = cdf.pos.astype(int)
-cdf.to_csv("annotated02.csv") #basic annotation, overlaps are resolved into multiple rows
-print("done processing overlaps annotation")
-
-promoters=process_raw.process_annotation_data(df)
-missing_annot = annot_df[annot_df['region']=="not_annot"]
-promoter_loci=process_raw.process_promoter(missing_annot,promoters)
-promoter_loci.pos = promoter_loci.pos.astype(int) # loci in promoters, includes promoter-promoter overlaps in one row
-print("done promoter processing")
-
-poverl = promoter_loci[promoter_loci['region']=="genes_overlap"]
-poverlapping_loci=process_raw.process_overlap(promoters,poverl)
-cdf2=pd.concat([promoter_loci,poverlapping_loci])
-cdf2.pos = cdf2.pos.astype(int)
-cdf2.to_csv("promoters02.csv") # loci in promoters, promoter-promoter overlaps are resolved into mutliple rows
-print("done processing overlaps in promoter annotation")
-
-# we accounted for pos that fall in more than 1 gene region, and pos that fall in more than 1 promoter region
-# now we correct for if pos falls into both gene body and promoter region
-
-new_df=process_raw.annotate_raw(promoters,loci, one_length_print=True) # redo annotation with with +5000 for promoters
-new_df = new_df[new_df['region']=="genes_overlap"] #now it can be gene-gene, gene-promoter, gene-gene-promoter, gene-promoter-promoter or promoter-promoter overlap
-new_df=new_df[~new_df.pos.isin(poverl.pos)] #remove promoter-promoter overlap
-new_loci=process_raw.process_overlap(promoters,new_df)
-
-ori_overlaps=annot_df[annot_df["region"]=="genes_overlap"]
-oridf=cdf[cdf.pos.isin(ori_overlaps.pos)] # get annotations for overlapped genes
-
-new_loci.gene = new_loci.gene.fillna('NaN')
-oridf.gene = oridf.gene.fillna('NaN')
-annot_df.gene = annot_df.gene.fillna('NaN')
-
-new_loci.to_csv("new_loci.csv")
-print(new_loci.head())
-
-print("starting gene-promoter overlap resolve")
-outdf=pd.DataFrame()
-for index, row in new_loci.iterrows():
-  found_in_oridf = oridf[(oridf["pos"]==row[2]) & (oridf["chr"]==row[0])] # chr, pos also in origianl df containing overlaps (no promoter)
-  others_in_new_loci = new_loci[(new_loci["pos"]==row[2]) & (new_loci["chr"]==row[0])] # other same chr, pos in this df
-  if len(found_in_oridf) > 0: # gene-gene overlap?
-    if len(found_in_oridf) == len(others_in_new_loci): # regular gene-gene overlap, already in annotated02.csv
-      pass
-    elif len(found_in_oridf) < len(others_in_new_loci): #special case, gene-gene-promoter, resolve later if it comes up
-      print("Error: more hits in new_loci than in oridf, due to gene-gene-promoter overlap")
-    else:
-      print("Error: more hits in oridf than in new_loci")
-  else: # gene-promoter or gene-promoter-promoter, this is what we are really interested in
-    dfmatch=annot_df[(annot_df["chr"]==row[0]) & (annot_df["pos"]==row[2]) & (annot_df["gene"]==row[1])] # chr, pos, gene name in original df
-    if len(dfmatch) == 1: # this is the original gene name, hit for the gene body
-      outdf = outdf.append({'chr' : row[0], 'pos' : row[2], 'region' : list(dfmatch.region)[0], "gene" : list(dfmatch.gene)[0]}, ignore_index = True)
-    if len(dfmatch) == 0: # this is the new gene hit, hit for the promoter
-        r="promoter" + ":" + row[3] # region it would fall in in "extended gene body", if intron, UTR, etc. if is promoter for regular gene
-        outdf = outdf.append({'chr' : row[0], 'pos' : row[2], 'region' : r, "gene" : row[1]}, ignore_index = True)
-    if len(dfmatch) > 1:
-      print("Error: more than one hit in original df")
-
-outdf[['promoter','p_type']] = outdf['region'].str.split(':',expand=True)
-
-print("checking gene-promoter output df")
-tdf=outdf.groupby(['chr','pos']).count()
-tdf["ok"]= tdf["region"]-tdf["p_type"] # if at least 1 -> there is a nonpromoter region
-print(len(tdf[tdf["ok"]<1])) # should be 0, if not, nonpromoter is missing somewhere
-print(len(tdf[tdf["p_type"]<1])) # should be 0, if not, promoter is missing somewhere
-
-p_overl_g=outdf[outdf["promoter"]=="promoter"]
-p_overl_g["p_type"] = p_overl_g["p_type"].map({"intron":"protein_coding", "3'UTR":"protein_coding", 
-                                               "5'UTR":"protein_coding", "alternative UTR":"protein_coding", 
-                                               "exon":"protein_coding", "tRNA":"tRNA", "lnc_RNA":"lnc_RNA", "miRNA":"miRNA", "pseudogene":"pseudogene",
-                                               "snRNA":"snRNA", "snoRNA":"snoRNA", "rRNA":"rRNA"})
-p_overl_g.drop('region', axis=1, inplace=True)
-p_overl_g.drop('promoter', axis=1, inplace=True)
-p_overl_g["region"]=p_overl_g["p_type"]
-p_overl_g.drop('p_type', axis=1, inplace=True)
-p_overl_g.to_csv("promoter_gene_overl.csv") # new promoter regions I didn't find before because they are gene-promoter-promoter or gene-promoter overlaps
-
-#CHECK POINT
-print("starting check points")
-only_promoter_loci=promoter_loci[promoter_loci['region']!="not_annot"] #loci in promoters
-only_not_annot_prom=promoter_loci[promoter_loci['region']=="not_annot"] #loci not annotated even after promoter processing
-only_annot_new_df=annot_df[annot_df['region']!="not_annot"] #loci anywhere else
-
-check1=len(only_promoter_loci) + len(only_annot_new_df) + len(only_not_annot_prom)
-check2=len(loci)
-print("is everything in order?")
-print(check1)
-print(check2)
-
-only_promoter_loci.to_csv("promoters01.csv") #includes all SNP that fall in promoters
-print("done done")
-```
-
-There are 6 types of annotations:
+There are 6 types of annotations in various files as the output of above python code:
 
 1. Gene body hits -> annotated01.csv, 
 2. Hits in gene body - gene body overlaps are resolved into separate lines -> annotated02.csv
-3. Promoter hits -> promoters01.csv
+3. Promoter hits -> promoters01.csv, just defined as within 2000 bp of TSS.
 4. Hits in promoter - promoter overlaps resolved into separate lines ->  promoters02.csv
 5. Hits in gene body - promoter overlaps  and hits in gene body - promoter - promoter overlaps -> promoter_gene_overl.csv
 7. Hits in gene body - gene body - promoter overlaps (rare, this annotation still shows pos as simple gene body - gene body overlap)
 
- [annotation for all loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/annotated02_fst_2pops.csv) (overlaps resolved) TODO update these links
-
- [promoters](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/promoters_fst_2pops.csv)
-
-TODO rerun as I changed promoter = 5000kb to 2000kb
-
-I gathered all of the above annotation data into one big dataframe using the gather_annot_info.py code. This created a dataframe with all outlier loci as rows and columns containing region information such as intron, promoter, etc with a number representing how many of these regions each loci "hit". So for example if a locus was found in 2 overlapping promoter regions, the whole row has 0s except for the promoter column which says 2. From this dataframe, I then extracted rows that were not annotated at all. -> input_for_extra_regannot_notannot.csv, Loci in this file were converted to v3.1 as follows. 
+I gathered all of the above annotation data into one big dataframe using the [gather_annot_info.py](https://github.com/Cpetak/urchin_adaptation/blob/main/code/gather_annot_info.py) code. This created a dataframe with all outlier loci as rows and columns containing region information such as intron, promoter, etc with a number representing how many of these regions each loci "hit". So for example if a locus was found in 2 overlapping promoter regions, the whole row has 0s except for the promoter column which says 2.  [Here](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/gathered_annotation.csv) is this file. From this dataframe, I then extracted rows that were not annotated at all -> input_for_extra_regannot_notannot.csv. Loci in this file were converted to v3.1 as follows. 
 
 #### Annotating outliers with v3.1 for regulatory regions
 
@@ -164,9 +31,7 @@ Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome
 
 Opened input_for_extra_regannot_notannot.csv in Visual Studio Code, and from there I copied into space in link above. Had to remove qutation marks and ".1" from the end of the chromosome numbers. Chr, pos space separated.
 
-Most successfully remapped: 54 failed out of 2241, some mapped to multiple regions. #TODO update this
-
-[remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/annotated02_fst_2pops_remappedto3.1.txt) #TODO update all links in this markdown
+TODO Most successfully remapped: 26 failed out of 878, some mapped to multiple regions. [remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/input_for_extra_regannot_notannot_3.1.csv)
 
 Regulatory regions: #TODO find citations for each of these
 
@@ -181,7 +46,9 @@ Additional: lncRNA DONE
 
 TODO when available: echinobase CRE experimentally validate data, supp of Khor 2021, Computational ID, TFBS
 
-For the above, some files contained overlaps within regions, I resolved these using the check_overlap_within_df.py.
+For the above, some files contained overlaps between regions within the same file, I resolved these using the check_overlap_within_df.py.
+
+ITT TARTOK
 
 Then, the files above along with the input_for_extra_regannot_notannot_3.1.csv file were the input to the annot_reg_regions.py program. -> output list of positions that fell in an lncRNA region, and another list of positions that fell in any of the regulatory regions instead (ATAC, Chip, L.var, etc.).
 
@@ -191,7 +58,7 @@ Chi-squared analysis was run as shown in chi-squared.py. It takes gathered_annot
 
 To get the total number of lncRNA nucleotides (for expected number of hits in chi-squared): overlap processed with check_overlap_within_df.py, then gff annotation (processed with filtering_annotation_forlist.py to account for promoters) was subtracted with take_out_gff_from_lncrna.py. Note: sp4.lncRNAs_overlap_processed.csv was first converted from 3.1 to 5.0. Then, each region's length was calculated and summed, together with the number of nucleotides for lncRNA in ncbi. Final number: 17,703,544
 
-To get the total number of enhancer nucleotides (for expected number of hits in chi-squared): overlapped regions from all different resources (ATAC, Chip, etc) into 1 file using the get_enhancer_overlaps.py code (regulatory_regions_lit_review folder, output overlapped_enhancers.csv). Then, I subtracted regions in lncRNA (additional file) and gff (processed as above). Gff file was translated into version 3.1. USED CODE X.
+To get the total number of enhancer nucleotides (for expected number of hits in chi-squared): overlapped regions from all different resources (ATAC, Chip, etc) into 1 file using the get_enhancer_overlaps.py code (regulatory_regions_lit_review folder, output overlapped_enhancers.csv). Then, I subtracted regions in lncRNA (additional file) and gff (processed as above). Downloaded gff file for 3.1 version from NCBI, using this after processing (like above for gff 5.0). take_out_lnc_from_enhancer.py for subtracting lncRNA, then Y for subtracting gff. 
 
 ### GO enrichment
 
