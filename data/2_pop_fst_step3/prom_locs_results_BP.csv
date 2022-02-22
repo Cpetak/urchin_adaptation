@@ -1,0 +1,6 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0007186","G protein-coupled receptor signaling pat...",1290,9,2.8,"0.0014"
+"GO:0015914","phospholipid transport",39,2,0.08,"0.0032"
+"GO:0043113","receptor clustering",2,1,0,"0.0043"
+"GO:0051668","localization within membrane",2,1,0,"0.0043"
+"GO:0015748","organophosphate ester transport",47,2,0.1,"0.0047"

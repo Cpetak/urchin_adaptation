@@ -1,0 +1,7 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0031224","intrinsic component of membrane",9193,349,305.93,"7.8e-05"
+"GO:0016021","integral component of membrane",9179,348,305.46,"9.5e-05"
+"GO:0070985","transcription factor TFIIK complex",2,2,0.07,"0.0011"
+"GO:0016020","membrane",10428,379,347.02,"0.0019"
+"GO:0005886","plasma membrane",939,47,31.25,"0.0034"
+"GO:0071944","cell periphery",1036,49,34.48,"0.0082"

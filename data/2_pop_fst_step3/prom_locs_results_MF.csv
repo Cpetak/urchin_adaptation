@@ -1,0 +1,7 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0005548","phospholipid transporter activity",24,2,0.05,"0.0013"
+"GO:0043236","laminin binding",2,1,0,"0.0044"
+"GO:0004930","G protein-coupled receptor activity",1234,8,2.72,"0.0050"
+"GO:0050840","extracellular matrix binding",3,1,0.01,"0.0066"
+"GO:0047631","ADP-ribose diphosphatase activity",4,1,0.01,"0.0088"
+"GO:0004888","transmembrane signaling receptor activit...",1683,9,3.7,"0.0099"
