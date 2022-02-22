@@ -115,78 +115,25 @@ Finally, checked if LOC list in string-db had any enrichment.
 
 ### SPU for supplementary data analysis
 
-Converted LOC (the ones with outliers in their gene bodies, no lncRNA but also promoter regions) to SPU using the GenePageGeneralInfo_AllGenes.txt file available on the echinobase.
-
-Code to make a mapping between LOC and SPU based on above file:
-
-```python
-import pandas as pd
-import json
-
-df=pd.read_csv("SPU_LOC_echino.txt", sep="\t", header=None, names=["ID","LOC","name","gen","test"]) # same as GenePageGeneralInfo_AllGenes.txt
-
-# building dictionary with SPU
-SPU_LOC={}
-for index,row in df.iterrows():
-  newlocs=[]
-  newspus=[]
-  for coli in ["ID","LOC","name","gen","test"]: #columns where there can be gene name
-    if "LOC" in str(row[coli]): #if you find LOC, there could still be SPU
-      stuff = row[coli].split("|")
-      if len(stuff) > 1:
-        locs=[i for i in stuff if "LOC" in i]
-        for l in locs:
-          newlocs.append(l.split(" ")[-1])
-        spus= [i for i in stuff if "SPU" in i]
-        for s in spus:
-          newspus.append(s)
-      else:
-        newlocs.append(row[coli].split(" ")[-1])
-
-    if "SPU" in str(row[coli]): #if you find SPU, there could still be LOC
-      x = row[coli].split("|")
-      locs=[i for i in x if "LOC" in i]
-      if len(locs)>0:
-        for l in locs:
-          newlocs.append(l.split(" ")[-1])
-      y=[i for i in x if "SPU" in i]
-      for s in y:
-        newspus.append(s)
-
-  for l in set(newlocs):
-    for s in set(newspus):
-      if l in SPU_LOC.keys():
-        SPU_LOC[l].append(s)
-      else:
-        SPU_LOC[l]=[s]
-
-with open('data.json', 'w') as fp:
-    json.dump(dict, fp)
-
-```
-
-dictionary is available here: TODO
-
-Then I used this dictionary to map my LOCs to SPUs. Problem: in a lot of cases more than 1 SPU corresponds to a LOC. For Enrichment, I'll use just one SPU at random (choose another if the program doesn't recognise it or doesn't have GO associated to it) - i am trying to see if there is a better way to choose the SPU
-
-TODO code for converting my LOC to SPU, also output file
+Converted LOC (the ones in the list above, used for GO) to SPU using the GenePageGeneralInfo_AllGenes.txt file available on the echinobase. Code to make a mapping between LOC and SPU based on above file: [make_dic.py](https://github.com/Cpetak/urchin_adaptation/blob/main/code/make_dic.py) -> SPU_LOC.json Then I used this dictionary to map my LOCs to SPUs ([get_spu_list.py](https://github.com/Cpetak/urchin_adaptation/blob/main/code/get_spu_list.py)). In the case where muliple SPUs are associated to a LOC -> I kept all alternative SPUs as here I am just looking if I found a pos in a gene that is in any of the lists below. 
 
 #### Finding interesting genes:
 
-For searching in lists of biomineralisation, differentially expressed, etc genes, I'll use all SPU alternatives.
-
-- Biomineralisation genes: from Melissa's paper,  https://pubmed.ncbi.nlm.nih.gov/28141889/, IND
+- Biomineralisation genes: from https://pubmed.ncbi.nlm.nih.gov/28141889/, mel_biomin.csv
 - Differentially expressed genes:
-  - South vs North after common garden conditions, https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12036 IND
-  - Expression of genes of different populations in response to low pH, https://pubmed.ncbi.nlm.nih.gov/28141889/
-    - Genes differentially expressed between S. purpuratus populations following one day of exposure to low pH seawater, GENES UP-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO PH <7.8 & DOWN-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH <7.8, (DE_1.csv), GENES DOWN-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO  PH <7.8 & UP-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH  <7.8 (DE_2.csv)
-    - Genes differentially expressed between S. purpuratus populations following seven days of exposure to low pH seawater, GENES UP-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO PH  <7.8 & DOWN-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH  <7.8 (DE_3.csv), GENES DOWN-REGULATED IN POPULATIONS MOST FREQUENTLY EXPOSED TO  PH <7.8 & UP-REGULATED IN POPULATIONS LESS FREQUENTLY EXPOSED TO PH  <7.8, (DE_4)
-- Genes shown to be related to ph (i.e. SNPs correlated to pH conditions of pops), https://academic.oup.com/icb/article/53/5/857/733987 IND
-- Artificial selection low vs normal pH, 1 vs 7 days, allele frequencies that changed, https://www.pnas.org/content/110/17/6937, IND
-- Important genes:
+  - South vs North after common garden conditions, https://onlinelibrary.wiley.com/doi/full/10.1111/evo.12036, N_S_diff_expressed.csv
+  - Expression of genes of different populations in response to low pH, https://pubmed.ncbi.nlm.nih.gov/28141889
+    - Genes differentially expressed between S. purpuratus populations following one day of exposure to low pH seawater, genes up-regulated in populations most frequently exposed to ph <7.8 & down-regulated in populations less frequently exposed to ph <7.8, (DE_1.csv), genes down-regulated in populations most frequently exposed to  ph <7.8 & up-regulated in populations less frequently exposed to ph <7.8 (DE_2.csv)
+    - Genes differentially expressed between S. purpuratus populations following seven days of exposure to low pH seawater, genes up-regulated in populations most frequently exposed to ph  <7.8 & down-regulated in populations less frequently exposed to ph <7.8 (DE_3.csv), genes down-regulated in populations most frequently exposed to  ph <7.8 & up-regulated in populations less frequently exposed to ph  <7.8, (DE_4)
+  - Review paper gathering all genes differentially expressed in low pH, https://pubmed.ncbi.nlm.nih.gov/25070868/, all_diff_expressed.csv
+- Genes shown to be related to ph (i.e. SNPs correlated to pH conditions of pops), https://academic.oup.com/icb/article/53/5/857/733987, related_to_ph_snp.csv
+- Artificial selection low vs normal pH, 1 vs 7 days, allele frequencies that changed, https://www.pnas.org/content/110/17/6937, 1_7_days_alleles.csv
+- Genes shown to be related to ph (i.e. SNPs correlated to pH conditions during artificial selection), https://www.biorxiv.org/content/10.1101/422261v1, sig_pH75_onlySPU.txt and sig_pH80_onlySPU.txt
+- mRNA restricted to the PMC lineage, https://pubmed.ncbi.nlm.nih.gov/22190640/, PMC_enriched.csv
+- mRNA enriched in the PMC lineage, https://pubmed.ncbi.nlm.nih.gov/22190640/, PMC_restricted.csv
+- Ion homeostasis
+- Important genes (in GRN or master TF):
 - Transcription factors:
 
-HOL TARTOK: I was going through my Melissa_supplementary folder, finished with 2017_expression, next up is 2019_extreme_alleles
 
-ALSO: I need to add these files above to GitHub from the downloads folder where they are currently at
 
