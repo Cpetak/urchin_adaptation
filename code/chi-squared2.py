@@ -2,28 +2,29 @@ from scipy.stats import chisquare
 import pandas as pd
 import numpy as np
 
-def do_chi(all_hit):
+def do_chi(all_hit, tot):
   #calculated based on https://www.ncbi.nlm.nih.gov/genome/annotation_euk/Strongylocentrotus_purpuratus/102/
   #count x mean length (bp)
-  bp_exon=87323990 # double checked
+  bp_exon=245575 * 335 # double checked
   bp_3UTR=40771628 # double checked
   bp_5UTR=10192907 # double checked
-  bp_intron=412196958 # double checked
-  bp_lnc_paper= 1000000 # TODO number of basepairs (no double counting due to overlaps) from paper
+  bp_intron=218005 * 1808 # double checked
+  bp_lnc_paper=17703544 # number of basepairs (no double counting due to overlaps) from paper
   bp_lnc_ncbi=4850968 #only from ncbi
   bp_lnc=bp_lnc_paper + bp_lnc_ncbi
-  bp_enhancer=1000000 #TODO
-  bp_promoter=32947 * 2000 #this is based on the hypothesis that promoter = 2kb upstream gene, 32947 is the number of genes
+  bp_enhancer=5185974
+  bp_promoter=51178642 #TODO explanation
+  bp_regulatory=bp_enhancer + bp_promoter
   bp_noncoding=921855793-bp_exon-bp_3UTR-bp_5UTR-bp_intron-bp_lnc-bp_enhancer-bp_promoter
-  all_len=[bp_exon,bp_3UTR,bp_5UTR,bp_intron,bp_lnc,bp_enhancer,bp_promoter,bp_noncoding]
+  all_len=[bp_exon,bp_3UTR,bp_5UTR,bp_intron,bp_lnc,bp_regulatory,bp_noncoding]
 
   all_percent_expected=[]
   for a in all_len:
     all_percent_expected.append(a/921855793) #percentage of genome corresponding to each region
 
   #number of expected loci in each region if the high Fst loci were randomly distributed between the regions
-  all_expected_rounded=[round(element * sum(all_hit)) for element in all_percent_expected]
-  all_expected=[element * sum(all_hit) for element in all_percent_expected]
+  all_expected_rounded=[round(element * tot) for element in all_percent_expected]
+  all_expected=[element * tot for element in all_percent_expected]
 
   print(chisquare(all_hit, f_exp=all_expected))
   print("[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding]")
@@ -45,20 +46,27 @@ num_exon=len(df[df["exon"]!=0]) # could have overlapped with something else as w
 num_3UTR=len(df[df["3'UTR"]!=0])
 num_5UTR=len(df[df["5'UTR"]!=0])
 num_intron=len(df[df["intron"]!=0])
-num_other=len(df[(df["pseudogene"]!=0) & (df["alternative UTR"]!=0)])
 num_lnc=len(df[df["lnc_RNA"]!=0]) + len(additional_lnc)
 num_enhancer=len(notannot_enhancers[notannot_enhancers["confidence"]>0]) #TODO
 num_promoter=len(df[df["promoter"]!=0]) # could overlap with other promoter as well as gene
-num_noncoding=len(df[df["Not_annot"]==1]) - len(notannot_enhancers) - len(additional_lnc)
-all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding] # TODO num_other?
+num_regulatory=num_enhancer + num_promoter
 
-all_all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding, num_other]
+pseudogene=len(df[df["pseudogene"]!=0])
+snRNA=len(df[df["snRNA"]!=0])
+tRNA=len(df[df["tRNA"]!=0])
+snoRNA=len(df[df["snoRNA"]!=0])
+rRNA=len(df[df["rRNA"]!=0])
+miRNA=len(df[df["miRNA"]!=0])
+alternative_UTR=len(df[df["alternative UTR"]!=0])
 
-print(sum(all_all_hit))
+num_noncoding=len(df[df["Not_annot"]==1]) - len(notannot_enhancers) - len(additional_lnc) + pseudogene + snRNA + tRNA + snoRNA + rRNA + miRNA + alternative_UTR
+all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_regulatory,num_noncoding]
+
+print(sum(all_hit))
 print(len(df))
-print((sum(all_all_hit)-len(df))/len(df)*100) # it is this percent of an increase due to my method of counting
+print((sum(all_hit)-len(df))/len(df)*100) # it is this percent of an increase due to my method of counting
 
-do_chi(all_hit)
+do_chi(all_hit, len(df))
 
 ## Method 2: everything is counted once, more conservative
 # gene-gene neither is counted, promoter-promoter counted as 1, gene-promoter and gene-promoter-promoter only gene is counted.
@@ -87,20 +95,18 @@ num_exon=len(df2[df2["region"]=="exon"])
 num_3UTR=len(df2[df2["region"]=="3'UTR"])
 num_5UTR=len(df2[df2["region"]=="5'UTR"])
 num_intron=len(df2[df2["region"]=="intron"])
-num_other=len(df2[(df2["region"]=="pseudogene") & (df2["region"]=="alternative UTR")])
 num_lnc=len(df2[df2["region"]=="lnc_RNA"]) + len(additional_lnc)
 num_enhancer=len(notannot_enhancers[notannot_enhancers["confidence"]>0]) #TODO
 num_promoter=len(df2[df2["region"]=="promoter"])
-num_noncoding=len(df2[df2["region"]=="not_annot"]) - len(notannot_enhancers) - len(additional_lnc)
-all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding] # TODO num_other?
+num_regulatory=num_enhancer + num_promoter
+num_noncoding=len(df) - sum([num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter])
+all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_regulatory,num_noncoding]
 
-all_all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding, num_other]
-
-print(sum(all_all_hit))
+print(sum(all_hit))
 print(len(df))
-print((sum(all_all_hit)-len(df))/len(df)*100) # it is this percent of an increase due to my method of counting
+print((sum(all_hit)-len(df))/len(df)*100) # it is this percent of an increase due to my method of counting
 
-do_chi(all_hit)
+do_chi(all_hit,len(df))
 
 ## Method 3: same as method 2 but for gene-gene overlap select 1 at random instead of discarding all
 # Technically it drops first duplicate but since they were added to the csv randomly it shouldn't matter, so practically we end up selecting randomly
@@ -129,17 +135,16 @@ num_exon=len(df2[df2["region"]=="exon"])
 num_3UTR=len(df2[df2["region"]=="3'UTR"])
 num_5UTR=len(df2[df2["region"]=="5'UTR"])
 num_intron=len(df2[df2["region"]=="intron"])
-num_other=len(df2[(df2["region"]=="pseudogene") & (df2["region"]=="alternative UTR")])
 num_lnc=len(df2[df2["region"]=="lnc_RNA"]) + len(additional_lnc)
 num_enhancer=len(notannot_enhancers[notannot_enhancers["confidence"]>0]) #TODO
 num_promoter=len(df2[df2["region"]=="promoter"])
-num_noncoding=len(df2[df2["region"]=="not_annot"]) - len(notannot_enhancers) - len(additional_lnc)
-all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding] # TODO num_other?
+num_regulatory=num_enhancer + num_promoter
+num_noncoding=len(df) - sum([num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter])
+all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_regulatory,num_noncoding]
 
-all_all_hit=[num_exon,num_3UTR,num_5UTR,num_intron,num_lnc,num_enhancer,num_promoter,num_noncoding, num_other]
-
-print(sum(all_all_hit))
+print(sum(all_hit))
 print(len(df))
-print((sum(all_all_hit)-len(df))/len(df)*100) # it is this percent of an increase due to my method of counting
+print((sum(all_hit)-len(df))/len(df)*100) # it is this percent of an increase due to my method of counting
 
-do_chi(all_hit)
+do_chi(all_hit, len(df))
+

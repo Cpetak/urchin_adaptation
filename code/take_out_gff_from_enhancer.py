@@ -9,6 +9,21 @@ from tqdm import tqdm
 from bs4 import BeautifulSoup
 from tqdm import tqdm
 
+#NW to Scaffold number
+def get_scaff_num(nscaffold):
+  link=f"https://www.ncbi.nlm.nih.gov/nuccore/{nscaffold}?report=genbank"
+  response=requests.get(link)
+  soup=BeautifulSoup(response.text, 'html.parser')
+  mystr=str(soup)
+  splitted=mystr.split('Spur_3.1 ')
+  if len(splitted) > 1:
+    split2=splitted[2].split(',')
+    return(split2[0])
+  else:
+    print("not found")
+    print(nscaffold)
+    return("NOT FOUND")
+
 def df2dic(al, intervals):
     ranges = { interval : defaultdict(list) for interval in intervals }
     for Var in intervals:
@@ -63,7 +78,7 @@ def subtract_scaffold(contig, enemy, debug=False, max_safety=1e6):
             contig = contig[:good_idx] + segments + contig[good_idx+1:]
             if debug:
                 print("new",contig[good_idx-1:good_idx+2], "current idx", contig[good_idx])
-
+                
             if(good_idx >= len(contig) or evil_idx >= len(enemy)):
                 #print("extra check saved us.")
                 break
@@ -98,52 +113,70 @@ def subtract_scaffold(contig, enemy, debug=False, max_safety=1e6):
 def get_sub_results(all_chrs, al, kind1, kind2, ranges):
     ref=ranges[kind1]
     alt=ranges[kind2]
-    results = pd.DataFrame()
+    results = pd.DataFrame() 
     for item in tqdm(range(len(all_chrs))):
         ch=all_chrs[item]
         if len(al[(al["chr"]==ch) & (al["type"]==kind1)]) > 0:
             if len(al[(al["chr"]==ch) & (al["type"]==kind2)]) > 0: # there is something to substract
               new_contig = subtract_scaffold(ref[ch], alt[ch])
               for c in new_contig:
-                  results = results.append({'chr' : ch, 'start' : c[0], 'stop' : c[1]},
-                          ignore_index = True)
+                  results = results.append({'chr' : ch, 'start' : c[0], 'stop' : c[1]},  
+                          ignore_index = True) 
             else:
               for index, row in al[(al["chr"]==ch) & (al["type"]==kind1)].iterrows():
-                  results = results.append({'chr' : ch, 'start' : row.start, 'stop' : row.stop},
-                          ignore_index = True)
-
+                  results = results.append({'chr' : ch, 'start' : row.start, 'stop' : row.stop},  
+                          ignore_index = True) 
+                  
     results.start = results.start.astype(int)
     results.stop = results.stop.astype(int)
     return results
 
-enhdf=pd.read_csv("overlapped_enhancers.csv")
+df=pd.read_csv("nonoverlapping_nopromoter_gffannotations_3.1.csv", sep=",")
 
-lnc=pd.read_csv("sp4.lncRNAs_overlap_processed.csv")
+with open('NW_to_scaf_longest.json', 'r') as f: # saved most already to a file because get_scaff_num takes a while to run
+  NW_to_scaf = json.load(f)
 
-"""Take out lnc"""
+checklist=[]
+for i in df.chr.unique():
+  if i not in NW_to_scaf:
+    checklist.append(i)
+
+if len(checklist) >= 1: #checking if I have the scaffold info for every chromosome I need
+  for i in tqdm(range(len(checklist))):
+    NW_to_scaf[checklist[i]]=get_scaff_num(checklist[i])
+    sleep(0.1)
+
+df['chr']=df['chr'].map(NW_to_scaf)
+
+# test if all remapping to scaffold has worked
+print(len(df[df.isnull().any(axis=1)])) # should be 0
+
+enhdf=pd.read_csv("enhancers-lncRNA.csv")
+
+"""Take out gff"""
 
 reference = "enh"
-subtractables = ["lnc"]
+subtractables = ["gff"]
 intervals = [reference] + subtractables
 
 #processing dataframes
 enhdf["type"] = "enh"
-lnc["type"] = "lnc"
+df["type"] = "gff"
 enhdf=enhdf.sort_values(by=["chr",'start'])
-lnc=lnc.sort_values(by=["chr",'start'])
-al = pd.concat([lnc, enhdf])
+df=df.sort_values(by=["chr",'start'])
+al = pd.concat([df, enhdf])
 all_chrs=al.chr.unique()
 al["length"] = al["stop"] - al["start"]
 
 #CHECK IF THERE ARE NEGATIVE NUMBERS
 min(al["length"]) < 0
 
-#make it into a dictionary
+#make it into a dictionary 
 ranges = df2dic(al, intervals)
 
-results = get_sub_results(all_chrs, al, "enh", "lnc", ranges)
+results = get_sub_results(all_chrs, al, "enh", "gff", ranges)
 
 results["length"]=results["stop"]-results["start"]
 print(results.length.sum())
 
-results.to_csv("enhancers-lncRNA.csv")
+results.to_csv("enhancers-lncRNA-gff.csv")

@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 import json
 
-df=pd.read_csv("fst_2pop_remapped3.1.csv", sep=",")
+df=pd.read_csv("input_for_extra_regannot_notannot_3.1.csv", sep=",")
 df=df.drop(columns=['#feat_name', 'mapped_int','recip','asm_unit','coverage','mapped_stop','source_sub_start','source_sub_stop','source_int', 'source_length', 'mapped_length', 'source_strand', 'mapped_strand', 'source_stop'])
 
 unmapped=len(df) - len(df.dropna(axis=0))
@@ -39,7 +39,7 @@ def get_scaff_num(nscaffold):
 #with open("NW_to_scaf.json", "w") as outfile:
     #json.dump(NW_to_scaf, outfile)
 
-with open('NW_to_scaf.json', 'r') as f: # saved most already to a file because get_scaff_num takes a while to run
+with open('../supp_materials/NW_to_scaf_longest.json', 'r') as f: # saved most already to a file because get_scaff_num takes a while to run
   NW_to_scaf = json.load(f)
 
 checklist=[]
@@ -64,7 +64,10 @@ print(len(df[df.isnull().any(axis=1)])) # should be 0
 #if len(atac1[atac1["diff"]<=0]) > 0:
   #print("jajj")
 
-external_data=["arenas_mena_lit.csv", "ATAC_all_24h.csv", "ATAC_both_PMC_other_24h.csv", "ATAC_other_24h.csv", "ATAC_PMC_24h.csv", "Chip_all_peaks.csv", "DNAseq_PMCminus.csv", "DNAseq_PMCplus.csv", "eRNA_all.csv", "lytVar22_strPur31_48_50.tsv", "lytVar22_strPur31_49_50.tsv", "lytVar22_strPur31_50_50.tsv", "sp4.lncRNAs.bed"]
+ex_data=["arenas_mena_lit.csv", "Chip_all_peaks.csv", "ATAC_DNA_overlap.csv", "eRNA_all.csv", "lytVar22_strPur31_48_50.tsv", "lytVar22_strPur31_49_50.tsv", "lytVar22_strPur31_50_50.tsv", "sp4.lncRNAs.bed"]
+tpath="../supp_materials/"
+external_data=[tpath+i for i in ex_data]
+print(external_data)
 
 def check_lnc(mydf, theirdf, enhdf, label):
   for index, row in mydf.iterrows():
@@ -169,3 +172,4 @@ newdf=enhdf.groupby(["chr50","pos50", "chr31", "pos31"]).agg(lambda x: list(x)).
 #newdf['region'] = newdf['region'].apply(lambda x: x if x != ["ATAC", "sp4.lncRNAs.bed"] else ["sp4.lncRNAs.bed"])
 newdf["confidence"]=newdf.region.str.len()
 newdf.to_csv("reg_regions_withconfidence.csv")
+
