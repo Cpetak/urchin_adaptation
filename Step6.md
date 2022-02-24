@@ -150,3 +150,60 @@ cdf.to_csv("subbed.csv")
 ```
 
 subbed.csv contains the final fst value for each pos.
+
+Distribution of final pairwise Fst values:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/pairwise_FST_histogram.jpg" width="400" />
+
+Then bootstrapped the top 1% cutoff point using the following code:
+
+```python
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+df=pd.read_csv("subbed.csv")
+
+fsts=df.final_fst.to_numpy()
+
+def bootstrap_sample(amounts):
+    return np.random.choice(amounts, len(amounts), replace=True)
+
+def percentile_99(sample):
+     return np.percentile(sample, 99)
+
+def bootstrap_confidence_interval(data):
+    """
+    Creates list of 10000 99th percentile bootstrap replicates.
+    """
+
+    itnum=10000
+
+    bs_samples = np.empty(itnum)
+
+    for i in range(itnum):
+        bs_samples[i] = percentile_99(bootstrap_sample(data))
+
+    return bs_samples
+
+transactions_ci = bootstrap_confidence_interval(fsts)
+
+print(np.percentile(transactions_ci, 95))
+
+np.savetxt('99s.out', transactions_ci, delimiter=',')
+
+fig3 = plt.figure()
+plt.hist(transactions_ci, bins=40)
+fig3.savefig('boots.png')
+```
+
+Output: 0.0260773276575
+
+```bash
+awk -F "," ' $6 >= 0.0260773276575 ' subbed.csv > pair_fst_outs
+```
+
+Number of outliers here: 9780
+
+For analysis  (GO enrichment, Chi-squared, etc.) of outliers above and outliers coming from other tests (e.g. LFMM) visit : [this markdown](https://github.com/Cpetak/urchin_adaptation/blob/main/Analysis_of_outliers.md)
+

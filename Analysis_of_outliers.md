@@ -131,9 +131,9 @@ Converted LOC (the ones in the list above, used for GO) to SPU using the GenePag
 - Genes shown to be related to ph (i.e. SNPs correlated to pH conditions during artificial selection), https://www.biorxiv.org/content/10.1101/422261v1, sig_pH75_onlySPU.txt and sig_pH80_onlySPU.txt
 - mRNA restricted to the PMC lineage, https://pubmed.ncbi.nlm.nih.gov/22190640/, PMC_enriched.csv
 - mRNA enriched in the PMC lineage, https://pubmed.ncbi.nlm.nih.gov/22190640/, PMC_restricted.csv
-- Ion homeostasis
-- Important genes (in GRN or master TF):
-- Transcription factors:
+- Important genes (in GRN or master TF): TODO
+
+Note: if I want to look for specifically TFs or things involved in ion homeostasis -> search based on GO term
 
 
 
