@@ -29,7 +29,7 @@ I gathered all of the above annotation data into one big dataframe using the [ga
 
 Used this tool to convert locations to v3.1: https://www.ncbi.nlm.nih.gov/genome/tools/remap
 
-Opened input_for_extra_regannot_notannot.csv in Visual Studio Code, and from there I copied into space in link above. Had to remove qutation marks and ".1" from the end of the chromosome numbers. Chr, pos space separated.
+Opened input_for_extra_regannot_notannot.csv in Visual Studio Code, and from there I copied into space in link above. Had to remove qutation marks and ".1" from the end of the chromosome numbers. Chr:pos column separated.
 
 Most successfully remapped: 26 failed out of 878, 61 mapped to multiple regions. [remapped loci](https://github.com/Cpetak/urchin_adaptation/blob/main/data/2_pop_fst_step3/input_for_extra_regannot_notannot_3.1.csv)
 

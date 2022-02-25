@@ -90,13 +90,14 @@ pv <- lfmm_test(Y = Y,
                 X = X, 
                 lfmm = mod.lfmm, 
                 calibrate = "gif") #gif is default, and what others use
+# above funtion's documentation: https://rdrr.io/github/bcm-uga/lfmm/man/lfmm_test.html. "Additional corrections are required for multiple testing"
 
 pvalues <- pv$calibrated.pvalue 
 write.csv(pvalues,"LFMM_ridge_pvalues.csv")
 print("created csv with p-vals")
 
 #The histogram of test significance values is expected to be flat, with a peak near zero. 
-#A QQ-plot is displayed as follows.
+#A QQ-plot is displayed as follows. Explanation of QQ-plot: https://towardsdatascience.com/q-q-plots-explained-5aa8495426c0
 
 png(file = "QQplot.png")
 qqplot(rexp(length(pvalues), rate = log(10)),
