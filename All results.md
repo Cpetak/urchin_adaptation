@@ -51,4 +51,4 @@ And pairwise global Fst does not correlate with distance regardless of method:
 
 ### LFMM PCA
 
-<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/PCA.png" width="400" />
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/PCA.jpg" width="400" />
