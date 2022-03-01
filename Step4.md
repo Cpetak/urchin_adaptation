@@ -116,6 +116,43 @@ plot(-log10(pvalues),
 dev.off()
 ```
 
-TODO redo with different K
+Tried above code with k=1,2,7, and both binary and continous variables for pH.
 
-Also p-values adjusted?
+Then, run the following code for correction of multiple testing:
+
+```R
+library(qvalue)
+
+results<-read.csv(file="k_7_cont/LFMM_ridge_pvalues.csv", header=TRUE)
+print(head(results))
+
+pvalues<-results$V1
+
+qobj <- qvalue(p = pvalues)
+qvalues <- qobj$qvalues
+pi0 <- qobj$pi0
+lfdr <- qobj$lfdr
+
+summary(qobj)
+
+pdf(file = "qvals.pdf")
+hist(qobj)
+dev.off()
+```
+
+k=7, binary -> no significant qval
+
+k=7, continous -> 30 under 0.05
+
+k=1, binary ->  no significant qval
+
+k=2, binary -> no significant qval
+
+k=2, continous -> 7 under 0.05, 29 under 0.1, for pval 7681 under 0.01, 1242 under 0.001
+
+k=1, continous -> for qval 8 under 0.05, 25 under 0.1, for pval 7490 under 0.01, 1149 under 0.001
+
+so I am choosing continous, and k=1 or k=2 doesn't matter, p-values are very similary, qqplots nearly identical. No k=7 as it doesn't make sence based on PCA plot and also qqplot looks off
+
+K=2 cont it is, p=0.001 is the cut-off
+
