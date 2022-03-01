@@ -33,9 +33,19 @@ Again, no clustering is visible.
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/PCA_2.png" width="400" />
 
-No clustering by population can be seen.
+No clustering by population can be seen. Holds to every combination of PCs, tested up to PC 5.
 
 ### Pairwise global Fst
+
+2 methods used, they correlate with each other:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/realsfs_avefst.png" width="400" />
+
+And pairwise global Fst does not correlate with distance regardless of method:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/realsfs_dist.png" width="400" />
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/avefst_dist.png" width="400" />
 
 ### Bayenv matrix
 
