@@ -279,3 +279,18 @@ File I am using a bunch in downstream analysis: bayenv_withpos_0025filter.csv
 Final number of sites: 994,220
 
 Noouts, biallelic (across all pops, not just per pop), minMAF 0.025, every pop has site information
+
+In order to get covarience matrix based on file above:
+
+```bash
+./bayenv2 -i /users/c/p/cpetak/WGS/angsd_new/my_bayenv/testing_new/bayenv_final_0025filter.csv -p 7 -k 100000 -r 63479 > /users/c/p/cpetak/WGS/angsd_new/my_bayenv/testing_new/run_bayenv_filtered2/matrix.out
+```
+
+I run above code 5 times, as independent replicates. Took last matrix for each (100,000th iteration).
+
+Averaged those 5 matrices and used a Mantel test to compare it with the global pairwise Fst matrix: with 10,000 permutations, p=0.0402, r=0.623. Calculated in: https://colab.research.google.com/drive/1Zb4jjB70rOPS4ike7ySnHs_hk30N_9ff?usp=sharing
+
+
+
+
+

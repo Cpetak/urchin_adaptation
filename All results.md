@@ -49,6 +49,14 @@ And pairwise global Fst does not correlate with distance regardless of method:
 
 ### Bayenv matrix
 
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/bay_meanof5_corr.png" width="400" />
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/global_pairwise_fst.png" width="400" />
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/fst_vs_bayenv.png" width="400" />
+
+Mantel test to compare Bayenv cov matrix with the global pairwise Fst matrix: with 10,000 permutations, p=0.0402, r=0.623.
+
 ### LFMM PCA
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/PCA.jpg" width="400" />
