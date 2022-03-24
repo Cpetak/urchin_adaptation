@@ -21,7 +21,7 @@ with open("cut_filtered_vcf_t","w") as f:
     for i in range(len(data[0])):
         f.write(" ".join(get_col(i,data))+"\n")
 # make into LFMM format
-sed 's/0\/0/0/g' cut_filtered_vcf_t | sed 's/0\/1/1/g' | sed 's/1\/0/1/g' | sed 's/1\/1/2/g' | sed 's/NA/9/g' > lfmm_input
+sed 's/0\/0/0/g' cut_filtered_vcf_t | sed 's/0\/1/1/g' | sed 's/1\/0/1/g' | sed 's/1\/1/2/g' | sed 's/\.\/\./9/g' > lfmm_input # 's/NA/9/g' for non-pruned
 ```
 
 Running LFMM:
