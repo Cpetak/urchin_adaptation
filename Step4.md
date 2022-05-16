@@ -203,3 +203,5 @@ Looking at the p-value distribution, I realised it looked very conservative, acc
 
 My original p-value distribution:
 
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/LFMM_ridge_pvalues_k_1_1.png" width="400" />
+
