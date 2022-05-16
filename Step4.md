@@ -1,7 +1,3 @@
----
-typora-copy-images-to: ./images
----
-
 # Step 4: Running LFMM
 
 folders:
@@ -160,6 +156,8 @@ so I am choosing continous, and k=1 or k=2 doesn't matter, p-values are very sim
 
 ## Fix idea number 1:
 
+In WGS/make_vcf/using_vcf/LFMM_pruned
+
 LD pruning. [Code for LD pruning here](https://github.com/Cpetak/urchin_adaptation/blob/main/LD pruning.md) 
 
 0.5 -> 215,911 of 991,430 variants removed - 20%
@@ -171,6 +169,8 @@ neither changes LFMM results, nor did normalising env data
 Tested LFMM by adding a position with prefect allele frequencies and it gave me a p value of 0 basically and found it as significant by qvalues so that is not the issue… test01: StoN: 0,0,0,50%,0,50%,100%, test02: StoN: 0,0,0,100%,0,100%,100%
 
 ## Fix idea number 2:
+
+In WGS/make_vcf/using_vcf/LFMM_testing_env
 
 I am not using good values to represent pH variability? I reanalised the pH data and came up with other measures to correlate allele frequencies to. Code is [here](https://colab.research.google.com/drive/1rIY1rALjo2Rom6GuMkxzH9pBpk8xXEWT?usp=sharing), it is a colab notebook. These are:
 
@@ -203,8 +203,51 @@ Still, I got a very few outliers. (max 10). This was all tested with k=1.
 
 ## Fix idea number 3:
 
-Looking at the p-value distribution, I realised it looked very conservative, according to [this blogpost](http://varianceexplained.org/statistics/interpreting-pvalue-histogram/) and [this tutorial](https://bookdown.org/hhwagner1/LandGenCourse_book/WE_11.html).
+Looking at the p-value distribution, I realised it looked very conservative, according to [this blogpost](http://varianceexplained.org/statistics/interpreting-pvalue-histogram/) and [this tutorial](https://bookdown.org/hhwagner1/LandGenCourse_book/WE_11.html) as well as [this tutorial](http://membres-timc.imag.fr/Olivier.Francois/lfmm/files/LEA_1.html).
 
 My original p-value distribution:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/LFMM_ridge_pvalues_k_1_1.png" width="400" />
+
+“An essential point to understand here is that the FDR is predicated on the “ideal” p-value distribution (flat with a peak at 0)”
+
+This shape of the p-values could be the result of a high GIF (genomic inflation factor). In my case, this was calculated to be k=1 -> 0.6017833, k=2 -> 0.608143, k=7 -> 0.6418904
+
+Manually changing the GIF:
+
+```R
+zscore <- pv$score[,1]
+new.gif1 <- 0.45
+adj.pv1 <- pchisq(zscore^2/new.gif1, df=1, lower = FALSE)
+```
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/LFMM_ridge_pvalues_k_1_1_adjgif.png" width="400" />
+
+-> Looks much better.
+
+“High genomic inflation factors are caused by population stratification, strong linkage disequilibrium (LD) between SNPs” https://onlinelibrary.wiley.com/doi/full/10.1111/jbg.12419
+
+-> Makes sense that a slightly lower GIF is better for my data. I repeated LFMM tests with the 8 env variables in the table above with lower GIF:
+
+NEW number of outliers (all k=1): (qval < 0.1)
+
+|                 |         | with SAN = LOM | with SAN 8 |
+| --------------- | ------- | -------------- | ---------- |
+| no date restict | freq7.8 | 869            | 869        |
+| no date restict | mins    | 2              | 0          |
+| no date restict | ave100  | 1              | 0          |
+| no date restict | lower1% | 5              | 0          |
+| date restrict   | freq7.8 | 1642           | 1642       |
+| date restrict   | mins    | 654            | 10         |
+| date restrict   | ave100  | 1110           | 132        |
+| date restrict   | lower1% | 768            | 200        |
+
+Next up: 
+
+Changing k - check num outliers as well as shape of pval distribution.
+
+Test temp data too
+
+Results: 
+
+do venn diagram thingy like i did with Baypass results
