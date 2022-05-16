@@ -146,7 +146,7 @@ k=7, continous -> 30 under 0.05
 
 k=1, binary ->  no significant qval
 
-k=2, binary -> no significant qval
+k=2, binary -> no significant qval MAKES SENSE THAT CONTINOUS IS BETTER!
 
 k=2, continous -> 7 under 0.05, 29 under 0.1, for pval 7681 under 0.01, 1242 under 0.001
 

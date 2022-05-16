@@ -86,6 +86,10 @@ sed -i 's/NA/./g' temp_vcf_ready
 ./plink --bfile afterQC --allow-extra-chr --indep-pairwise 50 5 0.5 # test this first, see how many prune
 # -> Pruning complete.  215,911 of 991,430 variants removed. # this seems ok... 20%
 
+# Also tried:
+./plink --bfile afterQC --allow-extra-chr --indep-pairwise 50 5 0.2
+# -> Pruning complete.  393,874 of 991,430 variants removed... 39.7%
+
 # The output of either of these commands is two lists of SNPs: those that are pruned out and those that are not.
 # A separate command using the --extract or --exclude option is necessary to actually perform the pruning.
 # Each is a simple list of SNP IDs; both these files can subsequently be specified as the argument for a --extract or --exclude command.
@@ -104,3 +108,4 @@ cp -r LFMM LFMM_pruned
 sed -i '/^#/d' prunedvcf.vcf
 # --> about same number of qval and pval outliers...
 # --> increase strictness of pruning, eg 0.2??
+# --> that basically didn't change results either
