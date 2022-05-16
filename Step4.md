@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: ./images
+---
+
 # Step 4: Running LFMM
 
 folders:
@@ -205,3 +209,4 @@ My original p-value distribution:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/LFMM/LFMM_ridge_pvalues_k_1_1.png" width="400" />
 
+![Screenshot 2022-01-13 at 6.12.18 PM](/Users/csengeswork/Desktop/urchin_adaptation/Screenshot 2022-01-13 at 6.12.18 PM.png)
