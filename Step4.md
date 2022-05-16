@@ -154,5 +154,52 @@ k=1, continous -> for qval 8 under 0.05, 25 under 0.1, for pval 7490 under 0.01,
 
 so I am choosing continous, and k=1 or k=2 doesn't matter, p-values are very similary, qqplots nearly identical. No k=7 as it doesn't make sence based on PCA plot and also qqplot looks off
 
-K=2 cont it is, p=0.001 is the cut-off
+## Fix idea number 1:
+
+LD pruning. [Code for LD pruning here](https://github.com/Cpetak/urchin_adaptation/blob/main/LD pruning.md) 
+
+0.5 -> 215,911 of 991,430 variants removed - 20%
+
+0.2 -> 393,874 of 991,430 variants removed - 40%
+
+neither changes LFMM results, nor did normalising env data
+
+Tested LFMM by adding a position with prefect allele frequencies and it gave me a p value of 0 basically and found it as significant by qvalues so that is not the issue… test01: StoN: 0,0,0,50%,0,50%,100%, test02: StoN: 0,0,0,100%,0,100%,100%
+
+## Fix idea number 2:
+
+I am not using good values to represent pH variability? I reanalised the pH data and came up with other measures to correlate allele frequencies to. Code is [here](https://colab.research.google.com/drive/1rIY1rALjo2Rom6GuMkxzH9pBpk8xXEWT?usp=sharing), it is a colab notebook. These are:
+
+No date restrict means all data was considered in the calculation, date restrict means that only data recorded in April, May and June are considered, as well as only years 2011 and 2012. This second option is reasonable to the following reasons: 1) that is the period for larval life stage, 2) least missing data, 3) most even distribution of datapoints between populations.
+
+|      | no date restrict  | BOD      | CAP      | FOG      | KIB      | LOM      | SAN (spec) | TER     |
+| ---- | ----------------- | -------- | -------- | -------- | -------- | -------- | ---------- | ------- |
+| 1    | freq7.8           | 0.050751 | 0.071626 | 0.166984 | 0.003593 | 0.007647 | 0          | 0       |
+| 2    | mins              | 7.539    | 7.555    | 7.541    | 7.73     | 7.767    | 8          | 7.819   |
+| 3    | ave100            | 7.59296  | 7.62761  | 7.56631  | 7.8011   | 7.82439  | 8          | 7.84115 |
+| 4    | lower1%           | 7.676    | 7.677    | 7.631    | 7.82384  | 7.80476  | 8          | 7.864   |
+|      | **date restrict** |          |          |          |          |          |            |         |
+| 5    | freq7.8           | 0.001732 | 0.040543 | 0.008983 | 0.005094 | 0.002165 | 0          | 0       |
+| 6    | mins              | 7.775    | 7.597    | 7.668    | 7.73     | 7.795    | 8          | 7.819   |
+| 7    | ave100            | 7.81032  | 7.70106  | 7.7493   | 7.82525  | 7.84692  | 8          | 7.84115 |
+| 8    | lower1%           | 7.82791  | 7.71876  | 7.807    | 7.829    | 7.80885  | 8          | 7.864   |
+
+- Freq7.8 = number of datapoints under 7.8, standardized by the total number of datapoints recorded at that location.
+- Mins = minimum pH value recorded at that location.
+
+- Ave100 = lowest 100 pH values averaged together
+
+- Lower1% = 1th percentile pH value
+
+Above was repeated where SAN had the same value as LOM - since I don't have SAN data I have to approximate it and LOM is the closest by far. I kept freq 0 because there was a separate study that found it never to go that low...
+
+NEW number of outliers:
+
+Still, I got a very few outliers. (max 10). This was all tested with k=1.
+
+## Fix idea number 3:
+
+Looking at the p-value distribution, I realised it looked very conservative, according to [this blogpost](http://varianceexplained.org/statistics/interpreting-pvalue-histogram/) and [this tutorial](https://bookdown.org/hhwagner1/LandGenCourse_book/WE_11.html).
+
+My original p-value distribution:
 
