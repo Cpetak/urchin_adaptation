@@ -277,21 +277,23 @@ Date restriction:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140246157.png" width="400" />
 
+With frequency of pH < 7.8:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140646744.png" width="400" />
+
+Date restirced had many more outliers:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140835059.png" width="400" />
+
+And k7 had many more outliers than k1; all k1 outliers also k7 outliers:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140946141.png" width="400" />
+
+In conclusion, choosing k7 and date restricted freq < 7.8. 2893 outliers.
 
 
-Choosing k7, date restricted.
+
+TODO: Test temp data too
 
 
-
-
-
-
-
-Next up: 
-
-Test temp data too
-
-Results: 
-
-do venn diagram thingy like i did with Baypass results
 
