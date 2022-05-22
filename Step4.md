@@ -1,3 +1,7 @@
+---
+typora-copy-images-to: ./images
+---
+
 # Step 4: Running LFMM
 
 folders:
@@ -242,12 +246,52 @@ NEW number of outliers (all k=1): (qval < 0.1)
 | date restrict   | ave100  | 1110           | 132        |
 | date restrict   | lower1% | 768            | 200        |
 
-Next up: 
+How does changing K influence the above? (All SAN=LOM, qval<0.1)
 
-Changing k - check num outliers as well as shape of pval distribution.
+|                 |         | k=2  | k=7  |
+| --------------- | ------- | ---- | ---- |
+| no date restict | freq7.8 | 1015 | 1546 |
+| no date restict | mins    | 0    | 35   |
+| no date restict | ave100  | 1    | 16   |
+| no date restict | lower1% | 5    | 44   |
+| date restrict   | freq7.8 | 1635 | 2893 |
+| date restrict   | mins    | 607  | 2371 |
+| date restrict   | ave100  | 1227 | 2558 |
+| date restrict   | lower1% | 620  | 2058 |
+
+Shape of pval distribution for k=7? -> same as k=1
+
+# Results:
+
+Looking at the 8 environmental variables standardized, such that SD=1, mean=0:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/env_vars_ph.png" width="400" />
+
+As expected mins, bottom 100, and lower 1% are highly correlated with each other. Looking at LFMM outliers (q<0.1, k=7) refects this:
+
+No date restriction:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140014699.png" width="400" />
+
+Date restriction:
+
+<img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140246157.png" width="400" />
+
+
+
+Choosing k7, date restricted.
+
+
+
+
+
+
+
+Next up: 
 
 Test temp data too
 
 Results: 
 
 do venn diagram thingy like i did with Baypass results
+
