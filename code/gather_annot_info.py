@@ -58,10 +58,11 @@ df["accunted_for"] = df["pseudogene"] + df["snRNA"] + df["tRNA"] + df["lnc_RNA"]
 df["check"]=df["num_gene_hit"] - df["accunted_for"]
 cdf=df[(df["check"]!=0) & (df["promoter"]==0)]
 
+from collections import Counter
 for index, row in cdf.iterrows():
-  for e in row[2]:
-    df.loc[index,e]+=1
-  df.loc[index,e]-=1 # correcting as we started with 1 count already
+    c=Counter(row[2])
+    for e in row[2]:
+        df.loc[index,e]=c[e]
 
 print(len(df[(df["num_gene_hit"]==0) & (df["accunted_for"]==0) & (df["Not_annot"]==0)])) #should be 0
 df["accunted_for"] = df["pseudogene"] + df["snRNA"] + df["tRNA"] + df["lnc_RNA"] + df["snoRNA"] + df["rRNA"] + df["miRNA"] + df["exon"] + df["3'UTR"] + df["5'UTR"] + df["alternative UTR"] + df["intron"]

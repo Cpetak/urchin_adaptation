@@ -289,7 +289,21 @@ And k7 had many more outliers than k1; all k1 outliers also k7 outliers:
 
 <img src="https://github.com/Cpetak/urchin_adaptation/blob/main/images/image-20220522140946141.png" width="400" />
 
-In conclusion, choosing k7 and date restricted freq < 7.8. 2893 outliers.
+In conclusion, choosing k7 and date restricted freq < 7.8 (i.e. qvals_k_7_5_adjgif.csv). 2893 outliers.
+
+```bash
+awk -F"," '{print $2}' qvals_k_7_5_adjgif.csv > temp
+paste pos_info temp > temp2
+awk '$2<0.1' temp2 > temp3
+sed -i 's/\.1/\.1_/g' temp3
+awk '{print $1}' temp3 > temp4
+sed -i 's/^/"/' temp4
+sed -i 's/$/"/' temp4
+```
+
+Annotated outliers, was at the chi-squared step, and I wanted to integrate the SNP distribution info into it but realised I can only do that if I do same annotation (with enhancers, lncRNA etc) as I did with outliers SNP - previously I only computed annotated01.csv and promoters01.csv so now I am doing this in annotate_outs_5000/annot_outliers/annotate_all.py
+
+
 
 
 
