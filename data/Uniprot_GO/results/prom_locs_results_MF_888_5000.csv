@@ -1,0 +1,6 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0004888","transmembrane signaling receptor activit...",1683,14,3.36,"2.3e-06"
+"GO:0038023","signaling receptor activity",1706,14,3.41,"2.6e-06"
+"GO:0060089","molecular transducer activity",1706,14,3.41,"2.6e-06"
+"GO:0004930","G protein-coupled receptor activity",1234,12,2.46,"3.0e-06"
+"GO:0042988","X11-like protein binding",4,1,0.01,"0.008"

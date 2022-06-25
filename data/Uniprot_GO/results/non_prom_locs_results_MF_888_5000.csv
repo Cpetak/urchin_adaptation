@@ -1,0 +1,5 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0005509","calcium ion binding",1355,36,17.27,"2.2e-05"
+"GO:0004104","cholinesterase activity",17,3,0.22,"0.0012"
+"GO:0008201","heparin binding",10,2,0.13,"0.0068"
+"GO:0003746","translation elongation factor activity",12,2,0.15,"0.0098"

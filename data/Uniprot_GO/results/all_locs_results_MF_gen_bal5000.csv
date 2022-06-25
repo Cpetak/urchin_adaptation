@@ -1,0 +1,24 @@
+GO.ID,Term,Annotated,Significant,Expected,classicFisher
+GO:0001046,core promoter sequence-specific DNA bind...,1,1,0.01,0.00942
+GO:0001163,RNA polymerase I transcription regulator...,1,1,0.01,0.00942
+GO:0001164,RNA polymerase I core promoter sequence-...,1,1,0.01,0.00942
+GO:0016785,"transferase activity, transferring selen...",1,1,0.01,0.00942
+GO:0050508,glucuronosyl-N-acetylglucosaminyl-proteo...,1,1,0.01,0.00942
+GO:0050509,N-acetylglucosaminyl-proteoglycan 4-beta...,1,1,0.01,0.00942
+GO:0098621,phosphoseryl-selenocysteinyl-tRNA seleni...,1,1,0.01,0.00942
+GO:0140575,transmembrane monodehydroascorbate reduc...,1,1,0.01,0.00942
+GO:0017065,single-strand selective uracil DNA N-gly...,6,3,0.06,1.60E-05
+GO:0004844,uracil DNA N-glycosylase activity,7,3,0.07,2.80E-05
+GO:0097506,deaminated base DNA N-glycosylase activi...,7,3,0.07,2.80E-05
+GO:0019104,DNA N-glycosylase activity,17,3,0.16,0.00051
+GO:0017154,semaphorin receptor activity,43,3,0.41,0.0077
+GO:0008146,sulfotransferase activity,275,8,2.59,0.00464
+GO:0003953,NAD+ nucleosidase activity,281,8,2.65,0.00527
+GO:0016782,"transferase activity, transferring sulfu...",301,8,2.84,0.00786
+GO:0016799,"hydrolase activity, hydrolyzing N-glycos...",305,11,2.87,0.00016
+GO:0016798,"hydrolase activity, acting on glycosyl b...",474,11,4.47,0.00542
+GO:0004888,transmembrane signaling receptor activit...,1683,31,15.85,0.00023
+GO:0038023,signaling receptor activity,1706,31,16.07,0.00029
+GO:0060089,molecular transducer activity,1706,31,16.07,0.00029
+GO:0022857,transmembrane transporter activity,1731,28,16.31,0.00331
+GO:0005215,transporter activity,1785,31,16.81,0.00062

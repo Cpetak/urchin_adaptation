@@ -1,0 +1,6 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0016020","membrane",10428,114,96.04,"0.0011"
+"GO:0016021","integral component of membrane",9179,101,84.54,"0.0038"
+"GO:0031224","intrinsic component of membrane",9193,101,84.67,"0.0040"
+"GO:0000120","RNA polymerase I transcription regulator...",1,1,0.01,"0.0092"
+"GO:0070860","RNA polymerase I core factor complex",1,1,0.01,"0.0092"

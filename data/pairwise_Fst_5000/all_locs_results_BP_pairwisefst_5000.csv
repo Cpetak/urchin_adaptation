@@ -1,0 +1,43 @@
+GO.ID,Term,Annotated,Significant,Expected,classicFisher
+GO:0051126,negative regulation of actin nucleation,3,3,0.32,0.00119
+GO:0001568,blood vessel development,4,3,0.42,0.00439
+GO:0001944,vasculature development,4,3,0.42,0.00439
+GO:0006171,cAMP biosynthetic process,4,3,0.42,0.00439
+GO:0034315,regulation of Arp2/3 complex-mediated ac...,4,3,0.42,0.00439
+GO:0051125,regulation of actin nucleation,5,4,0.53,0.00058
+GO:0007601,visual perception,6,5,0.64,7.30E-05
+GO:1903510,mucopolysaccharide metabolic process,7,4,0.74,0.00339
+GO:0050953,sensory perception of light stimulus,10,6,1.06,0.0002
+GO:0007600,sensory perception,23,7,2.44,0.00793
+GO:0060078,regulation of postsynaptic membrane pote...,28,11,2.97,7.20E-05
+GO:0060079,excitatory postsynaptic potential,28,11,2.97,7.20E-05
+GO:0099565,"chemical synaptic transmission, postsyna...",28,11,2.97,7.20E-05
+GO:0042391,regulation of membrane potential,29,11,3.08,0.0001
+GO:0052652,cyclic purine nucleotide metabolic proce...,35,10,3.71,0.00268
+GO:0009190,cyclic nucleotide biosynthetic process,46,18,4.88,4.10E-07
+GO:0050877,nervous system process,52,18,5.52,3.30E-06
+GO:0009187,cyclic nucleotide metabolic process,54,18,5.73,6.10E-06
+GO:0003008,system process,60,18,6.37,3.10E-05
+GO:1905114,cell surface receptor signaling pathway ...,97,20,10.29,0.00264
+GO:0007267,cell-cell signaling,156,27,16.55,0.00721
+GO:0009101,glycoprotein biosynthetic process,330,49,35.01,0.00965
+GO:0005975,carbohydrate metabolic process,355,53,37.67,0.00659
+GO:0007155,cell adhesion,375,56,39.79,0.00531
+GO:0022610,biological adhesion,375,56,39.79,0.00531
+GO:0007166,cell surface receptor signaling pathway,728,100,77.24,0.00397
+GO:0006468,protein phosphorylation,735,98,77.99,0.00993
+GO:0034220,ion transmembrane transport,780,112,82.76,0.0005
+GO:0007186,G protein-coupled receptor signaling pat...,1290,242,136.87,4.90E-20
+GO:0006811,ion transport,1548,210,164.25,7.10E-05
+GO:0055085,transmembrane transport,1780,266,188.86,1.20E-09
+GO:0007165,signal transduction,3169,430,336.24,2.90E-09
+GO:0023052,signaling,3220,436,341.65,2.90E-09
+GO:0007154,cell communication,3266,445,346.53,7.50E-10
+GO:0006810,transport,3415,429,362.34,2.50E-05
+GO:0051234,establishment of localization,3434,429,364.36,4.30E-05
+GO:0051179,localization,3526,437,374.12,7.70E-05
+GO:0051716,cellular response to stimulus,3651,468,387.38,8.60E-07
+GO:0050896,response to stimulus,3822,482,405.53,3.90E-06
+GO:0050794,regulation of cellular process,4748,620,503.78,1.10E-10
+GO:0050789,regulation of biological process,4947,638,524.89,5.00E-10
+GO:0065007,biological regulation,5357,677,568.4,4.30E-09

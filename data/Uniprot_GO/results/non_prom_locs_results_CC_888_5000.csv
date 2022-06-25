@@ -1,0 +1,6 @@
+"GO.ID","Term","Annotated","Significant","Expected","classicFisher"
+"GO:0031224","intrinsic component of membrane",9193,157,134.9,"0.0021"
+"GO:0016020","membrane",10428,174,153.02,"0.0023"
+"GO:0016021","integral component of membrane",9179,156,134.7,"0.0029"
+"GO:0005886","plasma membrane",939,25,13.78,"0.0029"
+"GO:0071944","cell periphery",1036,26,15.2,"0.0053"

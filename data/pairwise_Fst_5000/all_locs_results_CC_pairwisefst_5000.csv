@@ -1,0 +1,10 @@
+GO.ID,Term,Annotated,Significant,Expected,classicFisher
+GO:0031224,intrinsic component of membrane,9193,1211,1051.55,8.50E-16
+GO:0016021,integral component of membrane,9179,1207,1049.95,2.30E-15
+GO:0016020,membrane,10428,1328,1192.81,1.20E-12
+GO:0005886,plasma membrane,939,152,107.41,4.40E-06
+GO:0045211,postsynaptic membrane,37,15,4.23,5.70E-06
+GO:0097060,synaptic membrane,37,15,4.23,5.70E-06
+GO:0098794,postsynapse,55,18,6.29,2.30E-05
+GO:0071944,cell periphery,1036,160,118.5,3.50E-05
+GO:0045202,synapse,129,26,14.76,0.0028

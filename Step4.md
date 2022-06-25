@@ -261,6 +261,30 @@ How does changing K influence the above? (All SAN=LOM, qval<0.1)
 
 Shape of pval distribution for k=7? -> same as k=1
 
+## Fix idea number 4:
+
+Increase minMAF, first from 0.025 to 0.05 -> 588,123 sites, combined with vcf -> 588,119 (extra SNP filtering by angsd)
+
+SAM=LOM
+
+|                 |         | k=1  | k=7  |
+| --------------- | ------- | ---- | ---- |
+| no date restict | freq7.8 | 647  | 1004 |
+| no date restict | mins    | 1    | 3    |
+| no date restict | ave100  | 0    | 1    |
+| no date restict | lower1% | 2    | 16   |
+| date restrict   | freq7.8 | 1090 | 1669 |
+| date restrict   | mins    | 445  | 1166 |
+| date restrict   | ave100  | 671  | 1263 |
+| date restrict   | lower1% | 462  | 1102 |
+
+then to 0.1 -> 337,325 sites, combined with vcf -> 337,325
+
+|                 |         | k=1  | k=7  |
+| --------------- | ------- | ---- | ---- |
+| no date restict | freq7.8 | 399  | 608  |
+| date restrict   | freq7.8 | 646  | 992  |
+
 # Results:
 
 Looking at the 8 environmental variables standardized, such that SD=1, mean=0:

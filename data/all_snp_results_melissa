@@ -1,0 +1,324 @@
+all_2000
+mel_biomin.csv
+how many I found: 223
+how many I expect to find: 220.98753962181658
+pvalue: 0.45491038890200797
+N_S_diff_expressed.csv
+how many I found: 31
+how many I expect to find: 42.27587714504317
+pvalue: 0.9700720083447527
+DE_1.csv
+how many I found: 206
+how many I expect to find: 216.5037344700696
+pvalue: 0.7726781085791081
+DE_2.csv
+how many I found: 189
+how many I expect to find: 181.27383684920028
+pvalue: 0.2918037644710841
+DE_3.csv
+how many I found: 197
+how many I expect to find: 183.83601122162713
+pvalue: 0.17347100490787545
+DE_4.csv
+how many I found: 142
+how many I expect to find: 153.73046234561156
+pvalue: 0.8391023098931334
+all_diff_expressed.csv
+how many I found: 375
+how many I expect to find: 385.6072430502423
+pvalue: 0.7144409815415662
+related_to_ph_snp.csv
+how many I found: 175
+how many I expect to find: 176.14948810434655
+pvalue: 0.5448684760964095
+1_7_days_alleles.csv
+how many I found: 13
+how many I expect to find: 19.216307793201445
+pvalue: 0.9449140915093722
+sig_pH75_onlySPU.txt
+how many I found: 406
+how many I expect to find: 390.0910482019893
+pvalue: 0.21415654522468466
+sig_pH80_onlySPU.txt
+how many I found: 333
+how many I expect to find: 301.69603235326264
+pvalue: 0.038416172506798546
+PMC_enriched.csv
+how many I found: 20
+how many I expect to find: 30.746092469122306
+pvalue: 0.984021435985742
+PMC_restricted.csv
+how many I found: 19
+how many I expect to find: 30.746092469122306
+pvalue: 0.9907602553325638
+
+
+prom_locs 2000
+mel_biomin.csv
+how many I found: 97
+how many I expect to find: 78.57306809487376
+pvalue: 0.02367673797567229
+N_S_diff_expressed.csv
+how many I found: 12
+how many I expect to find: 15.031369548584543
+pvalue: 0.8176378541227345
+DE_1.csv
+how many I found: 54
+how many I expect to find: 76.97883193062994
+pvalue: 0.9976643474653522
+DE_2.csv
+how many I found: 49
+how many I expect to find: 64.45269064014282
+pvalue: 0.9806458372596496
+DE_3.csv
+how many I found: 47
+how many I expect to find: 65.36368273399643
+pvalue: 0.9928920066000831
+DE_4.csv
+how many I found: 38
+how many I expect to find: 54.659525631216525
+pvalue: 0.9928113268470307
+all_diff_expressed.csv
+how many I found: 160
+how many I expect to find: 137.10431012496812
+pvalue: 0.028771891841383276
+related_to_ph_snp.csv
+how many I found: 48
+how many I expect to find: 62.630706452435604
+pvalue: 0.9764463990152514
+1_7_days_alleles.csv
+how many I found: 2
+how many I expect to find: 6.832440703902066
+pvalue: 0.9915783472558252
+sig_pH75_onlySPU.txt
+how many I found: 123
+how many I expect to find: 138.69854628921195
+pvalue: 0.9199617017111251
+sig_pH80_onlySPU.txt
+how many I found: 102
+how many I expect to find: 107.26931905126243
+pvalue: 0.7092185472401197
+PMC_enriched.csv
+how many I found: 11
+how many I expect to find: 10.931905126243304
+pvalue: 0.5320555320478906
+PMC_restricted.csv
+how many I found: 12
+how many I expect to find: 10.931905126243304
+pvalue: 0.4125976293617644
+
+non_prom_loc 2000
+mel_biomin.csv
+how many I found: 220
+how many I expect to find: 215.35632309542027
+pvalue: 0.38423638943943883
+N_S_diff_expressed.csv
+how many I found: 29
+how many I expect to find: 41.19860093999344
+pvalue: 0.9808008363739965
+DE_1.csv
+how many I found: 198
+how many I expect to find: 210.9867745108755
+pvalue: 0.824583360606206
+DE_2.csv
+how many I found: 185
+how many I expect to find: 176.65460706088098
+pvalue: 0.2738091884655934
+DE_3.csv
+how many I found: 191
+how many I expect to find: 179.15149196633513
+pvalue: 0.19605550674904754
+DE_4.csv
+how many I found: 141
+how many I expect to find: 149.81309432724888
+pvalue: 0.7759834266894899
+all_diff_expressed.csv
+how many I found: 371
+how many I expect to find: 375.7811782708493
+pvalue: 0.6055626330352053
+related_to_ph_snp.csv
+how many I found: 169
+how many I expect to find: 171.66083724997267
+pvalue: 0.5911997747888585
+1_7_days_alleles.csv
+how many I found: 13
+how many I expect to find: 18.72663679090611
+pvalue: 0.9321012693834195
+sig_pH75_onlySPU.txt
+how many I found: 399
+how many I expect to find: 380.15072685539405
+pvalue: 0.17039918288513856
+sig_pH80_onlySPU.txt
+how many I found: 329
+how many I expect to find: 294.0081976172259
+pvalue: 0.022687306807823444
+PMC_enriched.csv
+how many I found: 20
+how many I expect to find: 29.962618865449773
+pvalue: 0.9778768580531843
+PMC_restricted.csv
+how many I found: 19
+how many I expect to find: 29.962618865449773
+pvalue: 0.9869141101205247
+
+all_spus 5000
+mel_biomin.csv
+how many I found: 230
+how many I expect to find: 229.17040113673625
+pvalue: 0.4869532396320105
+N_S_diff_expressed.csv
+how many I found: 33
+how many I expect to find: 43.841294130506064
+pvalue: 0.9617688437163293
+DE_1.csv
+how many I found: 218
+how many I expect to find: 224.52056691077348
+pvalue: 0.6782913118071359
+DE_2.csv
+how many I found: 196
+how many I expect to find: 187.98615513535177
+pvalue: 0.28801500012784614
+DE_3.csv
+how many I found: 205
+how many I expect to find: 190.64320326447336
+pvalue: 0.15651742471494012
+DE_4.csv
+how many I found: 148
+how many I expect to find: 159.4228877472948
+pvalue: 0.8282669610565858
+all_diff_expressed.csv
+how many I found: 389
+how many I expect to find: 399.88574343279777
+pvalue: 0.7157694749710715
+related_to_ph_snp.csv
+how many I found: 181
+how many I expect to find: 182.6720588771086
+pvalue: 0.5594831098169215
+1_7_days_alleles.csv
+how many I found: 15
+how many I expect to find: 19.92786096841185
+pvalue: 0.8924391871153323
+sig_pH75_onlySPU.txt
+how many I found: 416
+how many I expect to find: 404.53557765876053
+pvalue: 0.28881293538389663
+sig_pH80_onlySPU.txt
+how many I found: 342
+how many I expect to find: 312.86741720406604
+pvalue: 0.052800469932531825
+PMC_enriched.csv
+how many I found: 20
+how many I expect to find: 31.884577549458957
+pvalue: 0.9902194256436735
+PMC_restricted.csv
+how many I found: 20
+how many I expect to find: 31.884577549458957
+pvalue: 0.9902194256436735
+
+prom_locs 5000
+mel_biomin.csv
+how many I found: 130
+how many I expect to find: 120.61864684664991
+pvalue: 0.20640655092070145
+N_S_diff_expressed.csv
+how many I found: 17
+how many I expect to find: 23.074871570663458
+pvalue: 0.9204000791496846
+DE_1.csv
+how many I found: 101
+how many I expect to find: 118.17131198309468
+pvalue: 0.9518663710621958
+DE_2.csv
+how many I found: 83
+how many I expect to find: 98.94225234087514
+pvalue: 0.9548275755906541
+DE_3.csv
+how many I found: 94
+how many I expect to find: 100.34072940576384
+pvalue: 0.7510704417370957
+DE_4.csv
+how many I found: 59
+how many I expect to find: 83.90862389332167
+pvalue: 0.998292168305022
+all_diff_expressed.csv
+how many I found: 221
+how many I expect to find: 210.47079826574853
+pvalue: 0.24049370263702313
+related_to_ph_snp.csv
+how many I found: 82
+how many I expect to find: 96.14529821109775
+pvalue: 0.9362774793227663
+1_7_days_alleles.csv
+how many I found: 5
+how many I expect to find: 10.48857798666521
+pvalue: 0.978796364554607
+sig_pH75_onlySPU.txt
+how many I found: 196
+how many I expect to find: 212.91813312930375
+pvalue: 0.887362846858331
+sig_pH80_onlySPU.txt
+how many I found: 165
+how many I expect to find: 164.6706743906438
+pvalue: 0.5003013747293835
+PMC_enriched.csv
+how many I found: 12
+how many I expect to find: 16.781724778664334
+pvalue: 0.907462171282661
+PMC_restricted.csv
+how many I found: 15
+how many I expect to find: 16.781724778664334
+pvalue: 0.7015825313186557
+
+non_prom_locs 5000
+mel_biomin.csv
+how many I found: 220
+how many I expect to find: 215.35632309542027
+pvalue: 0.38423638943943883
+N_S_diff_expressed.csv
+how many I found: 29
+how many I expect to find: 41.19860093999344
+pvalue: 0.9808008363739965
+DE_1.csv
+how many I found: 198
+how many I expect to find: 210.9867745108755
+pvalue: 0.824583360606206
+DE_2.csv
+how many I found: 185
+how many I expect to find: 176.65460706088098
+pvalue: 0.2738091884655934
+DE_3.csv
+how many I found: 191
+how many I expect to find: 179.15149196633513
+pvalue: 0.19605550674904754
+DE_4.csv
+how many I found: 141
+how many I expect to find: 149.81309432724888
+pvalue: 0.7759834266894899
+all_diff_expressed.csv
+how many I found: 371
+how many I expect to find: 375.7811782708493
+pvalue: 0.6055626330352053
+related_to_ph_snp.csv
+how many I found: 169
+how many I expect to find: 171.66083724997267
+pvalue: 0.5911997747888585
+1_7_days_alleles.csv
+how many I found: 13
+how many I expect to find: 18.72663679090611
+pvalue: 0.9321012693834195
+sig_pH75_onlySPU.txt
+how many I found: 399
+how many I expect to find: 380.15072685539405
+pvalue: 0.17039918288513856
+sig_pH80_onlySPU.txt
+how many I found: 329
+how many I expect to find: 294.0081976172259
+pvalue: 0.022687306807823444
+PMC_enriched.csv
+how many I found: 20
+how many I expect to find: 29.962618865449773
+pvalue: 0.9778768580531843
+PMC_restricted.csv
+how many I found: 19
+how many I expect to find: 29.962618865449773
+pvalue: 0.9869141101205247
